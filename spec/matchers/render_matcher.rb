@@ -99,7 +99,7 @@ module Spec
           def render_content_with_page(tag_content, page)
             page.request = ActionController::TestRequest.new
             page.request.params[:sample_param] = 'data'
-            page.request.request_uri = @request_uri || page.url
+            page.request.url = @request_uri || page.url
             page.request.host = @host || test_host
             ActionController::Base.relative_url_root = @relative_root
             page.response = ActionController::TestResponse.new

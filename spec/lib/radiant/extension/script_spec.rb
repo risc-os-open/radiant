@@ -237,7 +237,7 @@ describe "Registry::Installer" do
 
   it "should copy the extension to vendor/extensions" do
     @installer.path = "/tmp"
-    FileUtils.should_receive(:cp_r).with('/tmp', "#{RAILS_ROOT}/vendor/extensions/example")
+    FileUtils.should_receive(:cp_r).with('/tmp', "#{Rails.root}/vendor/extensions/example")
     FileUtils.should_receive(:rm_r).with('/tmp')
     @installer.copy_to_vendor_extensions
   end
@@ -265,7 +265,7 @@ describe "Registry::Uninstaller" do
   end
 
   it "should remove the extension directory" do
-    FileUtils.should_receive(:rm_r).with("#{RAILS_ROOT}/vendor/extensions/example")
+    FileUtils.should_receive(:rm_r).with("#{Rails.root}/vendor/extensions/example")
     @uninstaller.remove_extension_directory
   end
 
@@ -377,7 +377,7 @@ describe "Registry::Git" do
 
     it "should copy the extension to vendor/extensions" do
       @git.path = "/tmp"
-      @git.should_receive(:cp_r).with('/tmp', "#{RAILS_ROOT}/vendor/extensions/example")
+      @git.should_receive(:cp_r).with('/tmp', "#{Rails.root}/vendor/extensions/example")
       @git.should_receive(:rm_r).with('/tmp')
       @git.copy_to_vendor_extensions
     end

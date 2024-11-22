@@ -1,0 +1,15 @@
+{
+  "name": "radiant",
+  "private": true,
+  "dependencies": {
+    "@rails/ujs": "^7.0.8",
+    "esbuild": "^0.14",
+    "sass": "^1.68.0"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --minify --outdir=app/assets/builds",
+    "build:css": "sass ./app/assets/stylesheets/application.scss ./app/assets/builds/application.css --no-source-map --style compressed --load-path=node_modules && sass ./app/assets/stylesheets/signup.scss ./app/assets/builds/signup.css  --no-source-map --style compressed --load-path=node_modules && sass ./app/assets/stylesheets/ripa_global_public_site.scss ./app/assets/builds/ripa_global_public_site.css --no-source-map --style compressed --load-path=node_modules",
+    "dev:build": "esbuild app/javascript/*.* --bundle --minify --sourcemap --outdir=app/assets/builds",
+    "dev:build:css:app": "sass ./app/assets/stylesheets/application.scss ./app/assets/builds/application.css --embed-sources --style compressed --load-path=node_modules"
+  }
+}

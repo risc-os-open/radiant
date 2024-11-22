@@ -1,6 +1,8 @@
 require 'digest/sha1'
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
+  include UserActionObserverConcern
+
   has_many :pages, :foreign_key => :created_by_id
 
   # Default Order
@@ -26,14 +28,16 @@ class User < ActiveRecord::Base
   validates_length_of :email, :maximum => 255, :allow_nil => true
 
   attr_writer :confirm_password
-  class << self
-    def unprotected_attributes
-      @unprotected_attributes ||= [:name, :email, :login, :password, :password_confirmation, :locale]
-    end
 
-    def unprotected_attributes=(array)
-      @unprotected_attributes = array.map{|att| att.to_sym }
-    end
+  def self.get_permitted_params_from(unsafe_params)
+    unsafe_params.require(:user).permit([
+      :name,
+      :email,
+      :login,
+      :password,
+      :password_confirmation,
+      :locale
+    ])
   end
 
   def has_role?(role)
@@ -45,7 +49,7 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticate(login_or_email, password)
-    user = find(:first, :conditions => ["login = ? OR email = ?", login_or_email, login_or_email])
+    user = self.where('login = ? OR email = ?', login_or_email, login_or_email).first
     user if user && user.authenticated?(password)
   end
 
@@ -62,11 +66,16 @@ class User < ActiveRecord::Base
   end
 
   def remember_me
-    update_attribute(:session_token, sha1(Time.now + Radiant::Config['session_timeout'].to_i)) unless self.session_token?
+    unless self.session_token?
+      self.update_column(
+        :session_token,
+        sha1(Time.now + Radiant::Configuration['session_timeout'].to_i)
+      )
+    end
   end
 
   def forget_me
-    update_attribute(:session_token, nil)
+    self.update_column(:session_token, nil)
   end
 
   private

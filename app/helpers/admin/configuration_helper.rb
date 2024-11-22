@@ -68,7 +68,7 @@ module Admin::ConfigurationHelper
   
   def setting_for(key)
     @config ||= {}    # normally initialized in Admin::ConfigurationController
-    @config[key] ||= Radiant.config.find_or_create_by_key(key)
+    @config[key] ||= Radiant.configuration.find_or_create_by_key(key)
   end
   
   def definition_for(key)

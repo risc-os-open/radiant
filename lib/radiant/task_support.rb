@@ -11,24 +11,24 @@ module Radiant
       def config_export(path = "#{Rails.root}/config/radiant_config.yml")
         self.establish_connection
         FileUtils.mkdir_p(File.dirname(path))
-        if File.open(File.expand_path(path), 'w') { |f| YAML.dump(Radiant::Config.to_hash.to_yaml,f) }
-          puts "Radiant::Config saved to #{path}"
+        if File.open(File.expand_path(path), 'w') { |f| YAML.dump(Radiant::Configuration.to_hash.to_yaml,f) }
+          puts "Radiant::Configuration saved to #{path}"
         end
       end
       def config_import(path = "#{Rails.root}/config/radiant_config.yml", clear = nil)
         self.establish_connection
         if File.exist?(path)
           begin
-            Radiant::Config.transaction do
-              Radiant::Config.delete_all if clear
+            Radiant::Configuration.transaction do
+              Radiant::Configuration.delete_all if clear
               configs = YAML.load(YAML.load_file(path))
               configs.each do |key, value|
-                c = Radiant::Config.find_or_initialize_by_key(key)
+                c = Radiant::Configuration.find_or_initialize_by_key(key)
                 c.value = value
                 c.save
               end
             end
-            puts "Radiant::Config updated from #{path}"
+            puts "Radiant::Configuration updated from #{path}"
           rescue ActiveRecord::RecordInvalid => e
             puts "IMPORT FAILED and rolled back. #{e}"
           end

@@ -9,7 +9,7 @@ describe ApplicationController do
   end
 
   it 'should initialize config' do
-    controller.config.should == Radiant::Config
+    controller.configuration.should == Radiant::Configuration
   end
 
   it 'should set the current user for the UserActionObserver' do
@@ -38,7 +38,7 @@ describe ApplicationController do
     controller.send :set_javascripts_and_stylesheets
     controller.include_javascript('test').should include('test')
   end
-    
+
   describe 'self.template_name' do
     it "should return 'index' when the controller action_name is 'index'" do
       controller.stub!(:action_name).and_return('index')
@@ -73,14 +73,14 @@ describe ApplicationController do
   end
 
   describe "set_timezone" do
-    it "should use Radiant::Config['local.timezone']" do
-      Radiant::Config['local.timezone'] = 'Kuala Lumpur'
+    it "should use Radiant::Configuration['local.timezone']" do
+      Radiant::Configuration['local.timezone'] = 'Kuala Lumpur'
       controller.send(:set_timezone)
       Time.zone.name.should == 'Kuala Lumpur'
     end
 
     it "should default to config.time_zone" do
-      Radiant::Config.initialize_cache # to clear out setting from previous tests
+      Radiant::Configuration.initialize_cache # to clear out setting from previous tests
       controller.send(:set_timezone)
       Time.zone.name.should == 'UTC'
     end

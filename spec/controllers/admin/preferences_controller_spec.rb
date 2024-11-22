@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Admin::PreferencesController do
   dataset :users
-  
+
   it "should allow you to view your preferences" do
     user = login_as(:non_admin)
     get :edit
@@ -27,20 +27,14 @@ describe Admin::PreferencesController do
     response.should be_success
     flash[:error].should match(/bad form data/i)
   end
-  
+
   it "should allow you to change your password" do
     login_as :non_admin
     put :update, { :user => { :password => 'funtimes', :password_confirmation => 'funtimes' } }
     user = users(:non_admin)
     user.password.should == user.sha1('funtimes')
   end
-  
-  it "should use the User.unprotected_attributes for checking valid_params?" do
-    User.should_receive(:unprotected_attributes).at_least(:once).and_return([:password, :password_confirmation, :email])
-    login_as :non_admin
-    put :update, { :user => { :password => 'funtimes', :password_confirmation => 'funtimes' } }
-  end
-  
+
   describe "@body_classes" do
     before do
       login_as(:non_admin)

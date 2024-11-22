@@ -130,7 +130,7 @@ module Radiant
       end
 
       # Expose the configuration object for init hooks
-      # class MyExtension < ActiveRecord::Base
+      # class MyExtension < ApplicationRecord
       #   extension_config do |config|
       #     config.after_initialize do
       #       run_something

@@ -2,34 +2,32 @@ require_dependency 'radiant'
 
 class ApplicationController < ActionController::Base
   include LoginSystem
-  
-  filter_parameter_logging :password, :password_confirmation
-  
+
   protect_from_forgery
-  
-  before_filter :set_current_user
-  before_filter :set_timezone
-  before_filter :set_user_locale
-  before_filter :set_javascripts_and_stylesheets
-  before_filter :force_utf8_params if RUBY_VERSION =~ /1\.9/
-  before_filter :set_standard_body_style, :only => [:new, :edit, :update, :create]
-  
-  attr_accessor :config, :cache
+
+  before_action :set_current_user
+  before_action :set_timezone
+  before_action :set_user_locale
+  before_action :set_javascripts_and_stylesheets
+  before_action :force_utf8_params if RUBY_VERSION =~ /1\.9/
+  before_action :set_standard_body_style, :only => [:new, :edit, :update, :create]
+
+  attr_accessor :configuration, :cache
   attr_reader :pagination_parameters
   helper_method :pagination_parameters
-  
+
   def initialize
     super
-    @config = Radiant::Config
+    @configuration = Radiant::Configuration
   end
-  
+
   # helpers to include additional assets from actions or views
   helper_method :include_stylesheet, :include_javascript
-  
+
   def include_stylesheet(sheet)
     @stylesheets << sheet
   end
-  
+
   def include_javascript(script)
     @javascripts << script
   end
@@ -50,7 +48,7 @@ class ApplicationController < ActionController::Base
       self.action_name
     end
   end
-    
+
   def rescue_action_in_public(exception)
     case exception
       when ActiveRecord::RecordNotFound, ActionController::UnknownController, ActionController::UnknownAction, ActionController::RoutingError
@@ -59,24 +57,24 @@ class ApplicationController < ActionController::Base
         super
     end
   end
-  
+
   private
-  
+
     def set_current_user
-      UserActionObserver.instance.current_user = current_user
-    end  
-        
-    def set_user_locale      
-      I18n.locale = current_user && !current_user.locale.blank? ? current_user.locale : Radiant::Config['default_locale']
+      Current.user = current_user # lib/current.rb
+    end
+
+    def set_user_locale
+      I18n.locale = current_user && !current_user.locale.blank? ? current_user.locale : Radiant::Configuration['default_locale']
     end
 
     def set_timezone
-      Time.zone = Radiant::Config['local.timezone'] || Time.zone_default
+      Time.zone = Radiant::Configuration['local.timezone'] || Time.zone_default
     end
-  
+
     def set_javascripts_and_stylesheets
       @stylesheets ||= []
-      @stylesheets.concat %w(admin/main)
+      @stylesheets.concat %w(application)
       @javascripts ||= []
     end
 
@@ -84,7 +82,7 @@ class ApplicationController < ActionController::Base
       @body_classes ||= []
       @body_classes.concat(%w(reversed))
     end
-    
+
     # When using Radiant with Ruby 1.9, the strings that come in from forms are ASCII-8BIT encoded.
     # That causes problems, especially when using special chars and with certain DBs, like DB2
     # That's why we force the encoding of the params to UTF-8
@@ -93,7 +91,7 @@ class ApplicationController < ActionController::Base
     # See http://stackoverflow.com/questions/8268778/rails-2-3-9-encoding-of-query-parameters
     # See https://rails.lighthouseapp.com/projects/8994/tickets/4807
     # See http://jasoncodes.com/posts/ruby19-rails2-encodings (thanks for the following code, Jason!)
-    def force_utf8_params      
+    def force_utf8_params
       traverse = lambda do |object, block|
         if object.kind_of?(Hash)
           object.each_value { |o| traverse.call(o, block) }
@@ -109,5 +107,5 @@ class ApplicationController < ActionController::Base
       end
       traverse.call(params, force_encoding)
     end
-    
+
 end

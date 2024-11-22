@@ -1,17 +1,16 @@
-require 'will_paginate'
 class Admin::ResourceController < ApplicationController
   extend Radiant::ResourceResponses
-  
+
   helper_method :model, :current_object, :models, :current_objects, :model_symbol, :plural_model_symbol, :model_class, :model_name, :plural_model_name
-  before_filter :populate_format
-  before_filter :never_cache
-  before_filter :load_models, :only => :index
-  before_filter :load_model, :only => [:new, :create, :edit, :update, :remove, :destroy]
-  after_filter :clear_model_cache, :only => [:create, :update, :destroy]
+  before_action :populate_format
+  before_action :never_cache
+  before_action :load_models, :only => :index
+  before_action :load_model, :only => [:new, :create, :edit, :update, :remove, :destroy]
+  after_action :clear_model_cache, :only => [:create, :update, :destroy]
 
   cattr_reader :paginated
   cattr_accessor :default_per_page, :will_paginate_options
-  
+
   responses do |r|
     # Equivalent respond_to block for :plural responses:
     # respond_to do |wants|
@@ -23,7 +22,7 @@ class Admin::ResourceController < ApplicationController
 
     r.singular.publish(:xml, :json) { render format_symbol => model }
     r.singular.default { redirect_to edit_model_path if action_name == "show" }
-    
+
     r.not_found.publish(:xml, :json) { head :not_found }
     r.not_found.default { announce_not_found; redirect_to :action => "index" }
 
@@ -55,12 +54,26 @@ class Admin::ResourceController < ApplicationController
     }, __FILE__, __LINE__
   end
 
+  # Updated from the equivalent of this code in 2024 for Rails 7:
+  #
+  #   def create
+  #     model.update_attributes!(params[model_symbol])
+  #     response_for :create
+  #   end
+  #
+  # ...noting that this is *spectacularly* unwise and unsafe, but for now, this
+  # is no *worse* than we had and I hope to come back and sort this out at some
+  # future time. A deep code analysis would let me know all possible values of
+  # ::model_class (see below) and a by-convention class method call could yield
+  # permitted parameters for each model (for example).
+  #
   [:create, :update].each do |action|
     class_eval %{
-      def #{action}                                       # def create
-        model.update_attributes!(params[model_symbol])    #   model.update_attributes!(params[model_symbol])
-        response_for :#{action}                           #   response_for :create
-      end                                                 # end
+      def #{action}
+        unsafe_attrs = params[model_symbol].to_unsafe_hash()
+        model.update!(unsafe_attrs)
+        response_for :#{action}
+      end
     }, __FILE__, __LINE__
   end
 
@@ -68,7 +81,15 @@ class Admin::ResourceController < ApplicationController
     model.destroy
     response_for :destroy
   end
-  
+
+  # 2024 Rails 7 notes:
+  #
+  # See comments on 'create, update' dynamic method generator above. This is
+  # extremely unwise. although it's possible that the range of controller names
+  # in any way possible here via routing do mean that it would be impossible to
+  # hack a route that inadvertently reveals the presence of a model-or-other
+  # class which wasn't supposed to be used.
+  #
   def self.model_class(model_class = nil)
     @model_class ||= (model_class || self.controller_name).to_s.singularize.camelize.constantize
   end
@@ -90,7 +111,7 @@ class Admin::ResourceController < ApplicationController
   # the @pagination_for@ helper method calls @will_paginate_options@ unless other options are supplied.
   #
   # pagination_for(@events)
-  
+
   def will_paginate_options
     self.class.will_paginate_options || {}
   end
@@ -107,11 +128,11 @@ class Admin::ResourceController < ApplicationController
   # the per_page figure can be set in several ways:
   # request parameter > declared by paginate_models > default set in config entry @admin.pagination.per_page@ > overall default of 50
   def pagination_parameters
-    pp = params[:pp] || Radiant.config['admin.pagination.per_page']
+    pp = params[:pp] || Radiant.configuration['admin.pagination.per_page']
     pp = (self.class.default_per_page || 50) if pp.blank?
     {
-      :page => (params[:p] || 1).to_i, 
-      :per_page => pp.to_i
+      :page  => (params[:p] || 1).to_i,
+      :limit => pp.to_i
     }
   end
 
@@ -129,7 +150,7 @@ class Admin::ResourceController < ApplicationController
         super
       end
     end
-    
+
     def model_class
       self.class.model_class
     end
@@ -183,7 +204,7 @@ class Admin::ResourceController < ApplicationController
     def continue_url(options)
       options[:redirect_to] || (params[:continue] ? {:action => 'edit', :id => model.id} : index_page_for_model)
     end
-    
+
     def index_page_for_model
       parts = {:action => "index"}
       if paginated? && model && i = model_class.all.index(model)
@@ -204,15 +225,15 @@ class Admin::ResourceController < ApplicationController
 
     def announce_removed
       ActiveSupport::Deprecation.warn("announce_removed is no longer encouraged in Radiant 0.9.x.", caller)
-      flash[:notice] = t("resource_controller.removed", :humanized_model_name => humanized_model_name)    
+      flash[:notice] = t("resource_controller.removed", :humanized_model_name => humanized_model_name)
     end
-    
+
     def announce_not_found
-      flash[:notice] = t("resource_controller.not_found", :humanized_model_name => humanized_model_name)    
+      flash[:notice] = t("resource_controller.not_found", :humanized_model_name => humanized_model_name)
     end
 
     def announce_update_conflict
-      flash.now[:error] =  t("resource_controller.update_conflict", :humanized_model_name => humanized_model_name)  
+      flash.now[:error] =  t("resource_controller.update_conflict", :humanized_model_name => humanized_model_name)
     end
 
     def clear_model_cache
@@ -226,19 +247,19 @@ class Admin::ResourceController < ApplicationController
     def format
       params[:format] || 'html'
     end
-    
-    
+
+
     # I would like to set this to expires_in(1.minute, :private => true) to allow for more fluid navigation
     # but the annoyance for concurrent authors would be too great.
     def never_cache
       expires_now
     end
-    
+
     # Assist with user agents that cause improper content-negotiation
     # warn "Remove default HTML format, Accept header no longer used. (#{__FILE__}: #{__LINE__})" if Rails.version !~ /^2\.1/
     def populate_format
       params[:format] ||= 'html' unless request.xhr?
     end
-    
-    
+
+
 end

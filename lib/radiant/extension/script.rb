@@ -43,16 +43,16 @@ Supports:       Radiant #{supports_radiant_version}
       else
         extension = task = command[0]
       end
-      rake_file = File.join(RAILS_ROOT, 'vendor', 'extensions', extension) + '/lib/tasks/' + extension + '_extension_tasks.rake'
+      rake_file = File.join(Rails.root, 'vendor', 'extensions', extension) + '/lib/tasks/' + extension + '_extension_tasks.rake'
       load rake_file if File.exist? rake_file
       tasks = Rake.application.tasks.map(&:name)
       tasks.include? task
     end
-    
+
     def file_utils
       FileUtils
     end
-    
+
     delegate :cd, :cp_r, :rm_r, :to => :file_utils
   end
 
@@ -69,7 +69,7 @@ Supports:       Radiant #{supports_radiant_version}
     end
 
     def copy_to_vendor_extensions
-      cp_r(self.path, File.expand_path(File.join(RAILS_ROOT, 'vendor', 'extensions', name)))
+      cp_r(self.path, File.expand_path(File.join(Rails.root, 'vendor', 'extensions', name)))
       rm_r(self.path)
     end
 
@@ -98,7 +98,7 @@ Supports:       Radiant #{supports_radiant_version}
     end
 
     def remove_extension_directory
-      rm_r(File.join(RAILS_ROOT, 'vendor', 'extensions', name))
+      rm_r(File.join(Rails.root, 'vendor', 'extensions', name))
     end
   end
 
@@ -151,11 +151,11 @@ Supports:       Radiant #{supports_radiant_version}
     def project_in_git?
       @in_git ||= File.directory?(".git")
     end
-    
+
     def checkout_command
       "git clone #{url} #{name}"
     end
-    
+
     def checkout
       if project_in_git?
         system "git submodule add #{url} vendor/extensions/#{name}"
@@ -169,7 +169,7 @@ Supports:       Radiant #{supports_radiant_version}
         end
       end
     end
-    
+
     def copy_to_vendor_extensions
       super unless project_in_git?
     end
@@ -283,13 +283,13 @@ module Radiant
         end
 
         def extension_paths
-          paths = [RAILS_ROOT, RADIANT_ROOT].uniq.map { |p| Dir["#{p}/vendor/extensions/*"] }
+          paths = [Rails.root, RADIANT_ROOT].uniq.map { |p| Dir["#{p}/vendor/extensions/*"] }
           paths.unshift Dir["#{RADIANT_ROOT}/test/fixtures/extensions/*"] if RAILS_ENV == 'test'    #nasty
           paths.flatten
         end
 
         def load_extensions
-          Registry::Extension.find(:all)
+          Registry::Extension.all.to_a
         end
 
         def find_extension
@@ -355,10 +355,10 @@ module Radiant
 
   For help on an individual command:
       script/extension help command
-      
+
   You may install extensions from another registry by setting the REGISTRY_URL
   By default the REGISTRY_URL is set to http://ext.radiantcms.org
-  
+
   Code for the registry application may be found at:
   http://github.com/radiant/radiant-extension-registry/
             }

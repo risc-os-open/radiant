@@ -2,8 +2,8 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe Radiant::ExtensionMigrator do
   
-  class Person < ActiveRecord::Base; end
-  class Place < ActiveRecord::Base; end
+  class Person < ApplicationRecord; end
+  class Place < ApplicationRecord; end
 
   before :each do
     ActiveRecord::Base.connection.delete("DELETE FROM schema_migrations WHERE version LIKE 'Basic-%' OR version LIKE 'Upgrading-%' OR version LIKE 'Replacing-%'")

@@ -1,33 +1,37 @@
 require 'acts_as_tree'
 
-class Page < ActiveRecord::Base
-
+class Page < ApplicationRecord
   class MissingRootPageError < StandardError
     def initialize(message = 'Database missing root page'); super end
   end
+
+  include UserActionObserverConcern
 
   # Callbacks
   before_save :update_virtual, :update_status, :set_allowed_children_cache
 
   # Associations
-  acts_as_tree :order => 'virtual DESC, title ASC'
-  has_many :parts, :class_name => 'PagePart', :order => 'id', :dependent => :destroy
-  accepts_nested_attributes_for :parts, :allow_destroy => true
-  has_many :fields, :class_name => 'PageField', :order => 'id', :dependent => :destroy
-  accepts_nested_attributes_for :fields, :allow_destroy => true
+  acts_as_tree order: 'virtual DESC, title ASC'
+
+  has_many :parts, class_name: 'PagePart', dependent: :destroy
+  accepts_nested_attributes_for :parts, allow_destroy: true
+
+  has_many :fields, class_name: 'PageField', dependent: :destroy
+  accepts_nested_attributes_for :fields, allow_destroy: true
+
   belongs_to :layout
-  belongs_to :created_by, :class_name => 'User'
-  belongs_to :updated_by, :class_name => 'User'
+  belongs_to :created_by, class_name: 'User'
+  belongs_to :updated_by, class_name: 'User'
 
   # Validations
   validates_presence_of :title, :slug, :breadcrumb, :status_id
 
-  validates_length_of :title, :maximum => 255
-  validates_length_of :slug, :maximum => 100
-  validates_length_of :breadcrumb, :maximum => 160
+  validates_length_of :title, maximum: 255
+  validates_length_of :slug, maximum: 100
+  validates_length_of :breadcrumb, maximum: 160
 
-  validates_format_of :slug, :with => %r{^([-_.A-Za-z0-9]*|/)$}
-  validates_uniqueness_of :slug, :scope => :parent_id
+  validates_format_of :slug, with: %r{\A([-_.A-Za-z0-9]*|/)\z}
+  validates_uniqueness_of :slug, scope: :parent_id
 
   validate :valid_class_name
 
@@ -38,19 +42,37 @@ class Page < ActiveRecord::Base
 
   annotate :description
   attr_accessor :request, :response, :pagination_parameters
-  class_inheritable_accessor :default_child
+  class_attribute :default_child
   self.default_child = self
 
-  set_inheritance_column :class_name
+  self.inheritance_column = 'class_name'
 
-  def layout_with_inheritance
-    unless layout_without_inheritance
-      parent.layout if parent?
-    else
-      layout_without_inheritance
-    end
+  def self.get_permitted_params_from(unsafe_params)
+    unsafe_params.require(:page).permit([
+      :lock_version,
+      :parent_id,
+      :title,
+      :slub,
+      :breadcrumb,
+      :layout_id,
+      :class_name,
+      :status_id,
+      :published_at,
+      page_part: [
+        :name,
+        :index
+      ]
+    ])
   end
-  alias_method_chain :layout, :inheritance
+
+  # def layout_with_inheritance
+  #   unless layout_without_inheritance
+  #     parent.layout if parent?
+  #   else
+  #     layout_without_inheritance
+  #   end
+  # end
+  # alias_method_chain :layout, :inheritance
 
   def description
     self["description"]
@@ -100,15 +122,15 @@ class Page < ActiveRecord::Base
   def published?
     status == Status[:published]
   end
-  
+
   def scheduled?
     status == Status[:scheduled]
   end
-  
+
   def status
    Status.find(self.status_id)
   end
-  
+
   def status=(value)
     self.status_id = value.id
   end
@@ -195,24 +217,24 @@ class Page < ActiveRecord::Base
       file_not_found_names = file_not_found_types.collect { |x| x.name }
       condition = (['class_name = ?'] * file_not_found_names.length).join(' or ')
       condition = "status_id = #{Status[:published].id} and (#{condition})" if live
-      children.find(:first, :conditions => [condition] + file_not_found_names)
+      children.where([condition] + file_not_found_names).first
     end
   end
   alias_method :find_by_url, :find_by_path
 
   def update_status
     self.published_at = Time.zone.now if published? && self.published_at == nil
-    
+
     if self.published_at != nil && (published? || scheduled?)
       self[:status_id] = Status[:scheduled].id if self.published_at  > Time.zone.now
       self[:status_id] = Status[:published].id if self.published_at <= Time.zone.now
     end
 
-    true    
+    true
   end
 
   def to_xml(options={}, &block)
-    super(options.reverse_merge(:include => :parts), &block)
+    super(options.reverse_merge(include: :parts), &block)
   end
 
   def default_child
@@ -260,7 +282,7 @@ class Page < ActiveRecord::Base
       @display_name = @display_name + " - not installed" if missing? && @display_name !~ /not installed/
       @display_name
     end
-    
+
     def display_name=(string)
       display_name(string)
     end
@@ -282,7 +304,7 @@ class Page < ActiveRecord::Base
       end
     end
 
-    def new_with_defaults(config = Radiant::Config)
+    def new_with_defaults(config = Radiant::Configuration)
       page = new
       page.parts.concat default_page_parts(config)
       page.fields.concat default_page_fields(config)
@@ -310,17 +332,17 @@ class Page < ActiveRecord::Base
 
     private
 
-      def default_page_parts(config = Radiant::Config)
+      def default_page_parts(config = Radiant::Configuration)
         default_parts = config['defaults.page.parts'].to_s.strip.split(/\s*,\s*/)
         default_parts.map do |name|
-          PagePart.new(:name => name, :filter_id => config['defaults.page.filter'])
+          PagePart.new(name: name, filter_id: config['defaults.page.filter'])
         end
       end
 
-      def default_page_fields(config = Radiant::Config)
+      def default_page_fields(config = Radiant::Configuration)
         default_fields = config['defaults.page.fields'].to_s.strip.split(/\s*,\s*/)
         default_fields.map do |name|
-          PageField.new(:name => name)
+          PageField.new(name: name)
         end
       end
   end
@@ -358,7 +380,7 @@ class Page < ActiveRecord::Base
     def lazy_initialize_parser_and_context
       unless @parser and @context
         @context = PageContext.new(self)
-        @parser = Radius::Parser.new(@context, :tag_prefix => 'r')
+        @parser = Radius::Parser.new(@context, tag_prefix: 'r')
       end
       @parser
     end

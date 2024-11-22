@@ -1,7 +1,7 @@
 class SiteController < ApplicationController
   include Radiant::Pagination::Controller
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
   no_login_required
 
   def self.cache_timeout=(val)
@@ -30,34 +30,31 @@ class SiteController < ApplicationController
     redirect_to welcome_url
   end
 
-  def cacheable_request?
-    (request.head? || request.get?) && live?
-  end
-  hide_action :cacheable_request?
-
-  def set_expiry(time, options={})
-    expires_in time, options
-  end
-  hide_action :set_expiry
-
-  def set_etag(val)
-    headers['ETag'] = val
-  end
-  hide_action :set_expiry
+#   def cacheable_request?
+#     (request.head? || request.get?) && live?
+#   end
+#   hide_action :cacheable_request?
+#
+#   def set_expiry(time, options={})
+#     expires_in time, options
+#   end
+#   hide_action :set_expiry
+#
+#   def set_etag(val)
+#     headers['ETag'] = val
+#   end
+#   hide_action :set_expiry
 
   private
     def batch_page_status_refresh
-      @changed_pages = []
-      @pages = Page.find(:all, :conditions => {:status_id => Status[:scheduled].id})
-      @pages.each do |page|
-        if page.published_at <= Time.now
-           page.status_id = Status[:published].id
-           page.save
-           @changed_pages << page.id
-        end
-      end
+      batch = Page
+        .where(status_id: Status[:scheduled].id)
+        .where('published_at < ?', Time.now).to_a
 
-      expires_in nil, :private=>true, "no-cache" => true if @changed_pages.length > 0
+      if batch.count > 0
+        batch.update_all(status_id: Status[:published].id)
+        expires_in nil, :private => true, "no-cache" => true
+      end
     end
 
     def set_cache_control
@@ -87,7 +84,7 @@ class SiteController < ApplicationController
     end
 
     def dev?
-      request.host == @config['dev.host'] || request.host =~ /^dev\./
+      request.host == Radiant::Configuration['dev.host'] || request.host =~ /^dev\./
     end
 
     def live?

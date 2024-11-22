@@ -1,41 +1,44 @@
-ActionController::Routing::Routes.draw do |map|
+Rails.application.routes.draw do
 
-  # Admin RESTful Routes
-  map.namespace :admin, :member => { :remove => :get } do |admin|
-    admin.resources :pages do |pages|
-      pages.resources :children, :controller => "pages"
+  # Admin RESTful routes
+  #
+  namespace :admin do
+    # :member => { :remove => :get }    ==> get :remove --?
+
+    resources :pages do
+      resources :children, controller: "pages"
     end
-    admin.resources :layouts
-    admin.resources :users
-  end
-  map.preview 'admin/preview', :controller => 'admin/pages', :action => 'preview', :conditions => {:method => [:post, :put]}
 
-  map.namespace :admin do |admin|
-    admin.resource :preferences
-    admin.resource :configuration, :controller => 'configuration'
-    # admin.resources :settings
-    admin.resources :extensions, :only => :index
-    admin.resources :page_parts
-    admin.resources :page_fields
-    admin.reference '/reference/:type.:format', :controller => 'references', :action => 'show', :conditions => {:method => :get}
+    resources :layouts
+    resources :users
   end
 
-  # Admin Routes
-  map.with_options(:controller => 'admin/welcome') do |welcome|
-    welcome.admin          'admin',                              :action => 'index'
-    welcome.welcome        'admin/welcome',                      :action => 'index'
-    welcome.login          'admin/login',                        :action => 'login'
-    welcome.logout         'admin/logout',                       :action => 'logout'
+  post 'admin/preview', to: 'admin/pages#preview'
+  put  'admin/preview', to: 'admin/pages#preview'
+
+  namespace :admin do
+    resource :preferences
+    resource :configuration, controller: 'configuration'
+
+    resources :extensions, only: :index
+    resources :page_parts
+    resources :page_fields
+
+    get '/reference/:type.:format', as: 'reference', to: 'references#show'
   end
+
+  # Admin other routes
+  #
+  get 'admin',         as: 'admin',   to: 'admin/welcome#index'
+  get 'admin/welcome', as: 'welcome', to: 'admin/welcome#index'
+  get 'admin/login',   as: 'login',   to: 'admin/welcome#login'
+  get 'admin/logout',  as: 'logout',  to: 'admin/welcome#logout'
 
   # Site URLs
-  map.with_options(:controller => 'site') do |site|
-    site.root                                                    :action => 'show_page', :url => '/'
-    site.not_found         'error/404',                          :action => 'not_found'
-    site.error             'error/500',                          :action => 'error'
-
-    # Everything else
-    site.connect           '*url',                               :action => 'show_page'
-  end
+  #
+  root                               to: 'site#show_page', url: '/'
+  get  'error/404', as: 'not_found', to: 'site#not_found'
+  get  'error/500', as: 'error',     to: 'site#error'
+  get  '*url',                       to: 'site#show_page'
 
 end
