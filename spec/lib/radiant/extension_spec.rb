@@ -14,9 +14,9 @@ describe Radiant::Extension do
     end
   end
 
-  it "should have access to the Radiant::AdminUI instance" do
+  it "should have access to the Radiant::AdminUi instance" do
     BasicExtension.instance.should respond_to(:admin)
-    BasicExtension.admin.should == Radiant::AdminUI.instance
+    BasicExtension.admin.should == Radiant::AdminUi.instance
   end
   
   it "should have a migrator" do
@@ -118,7 +118,7 @@ describe Radiant::Extension, "when inactive" do
 
   before :each do
     BasicExtension.deactivate
-    Radiant::AdminUI.instance.initialize_nav
+    Radiant::AdminUi.instance.initialize_nav
   end
 
   it "should become active when activated" do

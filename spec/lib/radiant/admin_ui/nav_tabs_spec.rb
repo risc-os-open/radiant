@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
-describe Radiant::AdminUI::NavTab do
+describe Radiant::AdminUi::NavTab do
   before :each do
-    @tab = Radiant::AdminUI::NavTab.new("Content")
+    @tab = Radiant::AdminUi::NavTab.new("Content")
   end
 
   it "should have a name" do
@@ -15,23 +15,23 @@ describe Radiant::AdminUI::NavTab do
   end
 
   it "should find contained items by name" do
-    subtab = Radiant::AdminUI::NavTab.new("The Pages")
+    subtab = Radiant::AdminUi::NavTab.new("The Pages")
     @tab << subtab
     @tab[:the_pages].should == subtab
     @tab['the pages'].should == subtab
   end
 
   it "should assign the tab on the sub-item when adding" do
-    subtab = Radiant::AdminUI::NavSubItem.new("Pages", "/admin/pages")
+    subtab = Radiant::AdminUi::NavSubItem.new("Pages", "/admin/pages")
     @tab << subtab
     subtab.tab.should == @tab
   end
 
   describe "inserting sub-items in specific places" do
     before :each do
-      @pages    = Radiant::AdminUI::NavSubItem.new("Pages",    "/admin/pages")
-      @things   = Radiant::AdminUI::NavSubItem.new("Things",   "/admin/things")
-      @comments = Radiant::AdminUI::NavSubItem.new("Comments", "/admin/comments")
+      @pages    = Radiant::AdminUi::NavSubItem.new("Pages",    "/admin/pages")
+      @things   = Radiant::AdminUi::NavSubItem.new("Things",   "/admin/things")
+      @comments = Radiant::AdminUi::NavSubItem.new("Comments", "/admin/comments")
       @tab << @pages
       @tab << @things
     end
@@ -53,7 +53,7 @@ describe Radiant::AdminUI::NavTab do
     
     it "should raise an error if a sub-item of the same name already exists" do
       @tab << @comments
-      lambda { @tab << @comments.dup }.should raise_error(Radiant::AdminUI::DuplicateTabNameError)
+      lambda { @tab << @comments.dup }.should raise_error(Radiant::AdminUi::DuplicateTabNameError)
     end
   end
 
@@ -66,17 +66,17 @@ describe Radiant::AdminUI::NavTab do
   end
   
   it "should warn about using the deprecated add method" do
-    ActiveSupport::Deprecation.should_receive(:warn)
+    Rails.logger.should_receive(:warn)
     @tab.add("Pages", "/admin/pages")
     @tab['Pages'].name.should == "Pages"
     @tab['Pages'].url.should == "/admin/pages"
   end
 end
 
-describe Radiant::AdminUI::NavSubItem do
+describe Radiant::AdminUi::NavSubItem do
   before :each do
-    @tab = Radiant::AdminUI::NavTab.new("Content")
-    @subitem = Radiant::AdminUI::NavSubItem.new("Pages", "/admin/pages")
+    @tab = Radiant::AdminUi::NavTab.new("Content")
+    @subitem = Radiant::AdminUi::NavSubItem.new("Pages", "/admin/pages")
     @tab << @subitem
   end
 

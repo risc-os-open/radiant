@@ -27,7 +27,7 @@ describe "Standard Tags" do
 
   it "<r:url> should act like r:path but issue a deprecation warning" do
     ActionController::Base.relative_url_root = nil
-    ActiveSupport::Deprecation.should_receive(:warn).and_return(true)
+    Rails.logger.should_receive(:warn).and_return(true)
     page(:home).should render("<r:url />").as("/")
   end
 

@@ -1,1 +1,1 @@
-require 'symbol_extensions'
+require_relative 'lib/symbol_extensions'

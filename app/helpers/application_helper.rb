@@ -141,7 +141,7 @@ module ApplicationHelper
   end
 
   def admin
-    Radiant::AdminUI.instance
+    Radiant::AdminUi.instance
   end
 
   def filter_options_for_select(selected=nil)

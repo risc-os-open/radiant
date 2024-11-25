@@ -1,5 +1,5 @@
 module Radiant
-  class Config
+  module Config
     class Definition
 
       attr_reader :empty, :default, :type, :notes, :validate_with, :select_from, :allow_blank, :allow_display, :allow_change, :units, :definer

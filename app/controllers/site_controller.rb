@@ -24,26 +24,23 @@ class SiteController < ApplicationController
       set_cache_control
       @performed_render ||= true
     else
-      render :template => 'site/not_found', :status => 404
+      render template: 'site/not_found', status: 404
     end
   rescue Page::MissingRootPageError
     redirect_to welcome_url
   end
 
-#   def cacheable_request?
-#     (request.head? || request.get?) && live?
-#   end
-#   hide_action :cacheable_request?
-#
-#   def set_expiry(time, options={})
-#     expires_in time, options
-#   end
-#   hide_action :set_expiry
-#
-#   def set_etag(val)
-#     headers['ETag'] = val
-#   end
-#   hide_action :set_expiry
+  def cacheable_request?
+    (request.head? || request.get?) && live?
+  end
+
+  def set_expiry(time, options={})
+    expires_in time, options
+  end
+
+  def set_etag(val)
+    headers['ETag'] = val
+  end
 
   private
     def batch_page_status_refresh
@@ -80,7 +77,9 @@ class SiteController < ApplicationController
 
     def process_page(page)
       page.pagination_parameters = pagination_parameters
-      page.process(request, response)
+
+      result = page.process(self.session(), self.cookies(), self.request(), self.response())
+      render(html: result[:body], status: result[:status])
     end
 
     def dev?

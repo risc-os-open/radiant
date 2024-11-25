@@ -2,19 +2,22 @@ source "https://rubygems.org"
 
 ruby "3.3.0"
 
-# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.0"
 
-# Use PostgresSQL as the database for Active Record
+# Use PostgresSQL
+#
 gem 'pg', '~> 1.5.8'
 
 # Use the Puma web server [https://github.com/puma/puma]
+#
 gem "puma", ">= 5.0"
 
 # Reduces boot times through caching; required in config/boot.rb
+#
 gem "bootsnap", require: false
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+#
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use SCSS for stylesheets via a robust preprocessing step:
@@ -38,12 +41,18 @@ gem 'propshaft', '~> 0.9'
 #
 gem "haml-rails", "~> 2.0"
 
-# # Use Dart SASS [https://github.com/rails/dartsass-rails]
-# gem "dartsass-rails"
+# Use Hub for authentication [https://github.com/pond/hubssolib]
+#
+gem 'hubssolib', '~> 2.0', require: 'hub_sso_lib'
 
 # Easy pagination [https://rubygems.org/gems/pagy]
 #
 gem 'pagy', '~> 9.0'
+
+# Tag-based templates (abandoneware, but runs on Ruby 2.6+, so Ruby 3.x should
+# also be fine) (https://github.com/jlong/radius)
+#
+gem 'radius', '~> 0.7'
 
 # Textile support [https://rubygems.org/gems/RedCloth]
 #
@@ -59,9 +68,13 @@ gem 'github-markup', '~> 5.0'
 
 # HTML processing [https://rubygems.org/gems/html-pipeline]
 #
-# TODO: v3.2.1 breaks everything; see
+# TODO: v3.2.1 breaks things...
 #
 gem 'html-pipeline', '= 3.2.0'
+
+# RSS parsing for the news feed extension.
+#
+gem 'rss', '~> 0.3'
 
 # Replace Rails <= 3.0 'auto_link' [https://rubygems.org/gems/rails_autolink]
 #

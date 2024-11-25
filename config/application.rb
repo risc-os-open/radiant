@@ -28,6 +28,23 @@ module Radiant
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    # Load all plugins in "lib".
+    #
+    Dir.glob(Rails.root.join('lib', 'plugins', '**/init.rb')) { | ruby_file | require ruby_file }
+
+    # Load all extensions in "lib" once everything else is set up (so that the
+    # lazy autoloader etc. all work).
+    #
+    Rails::Application::Finisher.initializer 'zebra.rool.radiant.extensions.load' do
+      Dir.glob(Rails.root.join('lib', 'extensions', '**/*')) do | item |
+        if item.end_with?('.yml')
+          I18n.load_path << item
+        elsif item.end_with?('.rb') || item == 'Rakefile'
+          require item
+        end
+      end
+    end
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

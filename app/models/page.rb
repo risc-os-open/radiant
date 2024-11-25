@@ -1,6 +1,7 @@
 require 'acts_as_tree'
 
 class Page < ApplicationRecord
+
   class MissingRootPageError < StandardError
     def initialize(message = 'Database missing root page'); super end
   end
@@ -41,7 +42,7 @@ class Page < ApplicationRecord
   include Annotatable
 
   annotate :description
-  attr_accessor :request, :response, :pagination_parameters
+  attr_accessor :session, :cookies, :request, :response, :pagination_parameters
   class_attribute :default_child
   self.default_child = self
 
@@ -144,11 +145,15 @@ class Page < ApplicationRecord
   end
   alias_method :url, :path
 
-  def process(request, response)
-    @request, @response = request, response
+  def process(session, cookies, request, response)
+    self.session  = session   # (see attr_accessor earlier; tag blocks can access this)
+    self.cookies  = cookies   #  "
+    self.request  = request   #  "
+    self.response = response  #  "
+
     set_response_headers(@response)
-    @response.body = render
-    @response.status = response_code
+
+    return { body: render().html_safe(), status: response_code() }
   end
 
   def headers
@@ -260,7 +265,7 @@ class Page < ApplicationRecord
       root.find_by_path(path, live)
     end
     def find_by_url(*args)
-      ActiveSupport::Deprecation.warn("`find_by_url' has been deprecated; use `find_by_path' instead.", caller)
+      Rails.logger.warn("`find_by_url' has been deprecated; use `find_by_path' instead.", caller)
       find_by_path(*args)
     end
 
@@ -294,7 +299,7 @@ class Page < ApplicationRecord
         end
       end
       if ActiveRecord::Base.connection.tables.include?('pages') && Page.column_names.include?('class_name') # Assume that we have bootstrapped
-        Page.connection.select_values("SELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL").each do |p|
+        Page.where.not(class_name: ['', nil]).pluck(:class_name).each do
           begin
             p.constantize
           rescue NameError, LoadError

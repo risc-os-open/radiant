@@ -1,1 +1,1 @@
-require 'object_extensions'
+require_relative 'lib/object_extensions'

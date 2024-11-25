@@ -2,7 +2,7 @@ require 'simpleton'
 require 'ostruct'
 
 module Radiant
-  class AdminUI
+  class AdminUi
     # This may be loaded before ActiveSupport, so do an explicit require
     require 'radiant/admin_ui/region_set'
 
@@ -69,7 +69,7 @@ module Radiant
       end
 
       def deprecated_add(name, url, caller)
-        ActiveSupport::Deprecation.warn("admin.tabs.add is no longer supported in Radiant 0.9.x.  Please update your code to use: \ntab \"Content\" do\n\tadd_item(...)\nend", caller)
+        Rails.logger.warn("admin.tabs.add is no longer supported in Radiant 0.9.x.  Please update your code to use: \ntab \"Content\" do\n\tadd_item(...)\nend", caller)
         NavSubItem.new(name, url)
       end
     end

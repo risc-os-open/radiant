@@ -2,7 +2,7 @@ class Layout < ApplicationRecord
   include UserActionObserverConcern
 
   # Default Order
-  default_scope order: 'name ASC'
+  default_scope { order(name: :asc) }
 
   # Associations
   has_many :pages

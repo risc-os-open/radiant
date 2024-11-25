@@ -19,7 +19,7 @@ describe Radiant::ExtensionLoader do
     end
     @extension_paths[:git_ext] = File.expand_path("#{RADIANT_ROOT}/test/fixtures/gems/radiant-gem_ext-extension-61e0ad14a3ae")
     @loader.stub!(:known_extension_paths).and_return(@extension_paths)
-    Radiant::AdminUI.instance.initialize_nav
+    Radiant::AdminUi.instance.initialize_nav
   end
 
   it "should be a Simpleton" do

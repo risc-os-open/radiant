@@ -1,0 +1,13 @@
+<p>Lets you use Embedded Ruby within a page. For example:</p>
+
+<pre><code>&lt;r:erb&gt;Time is &lt;% Time.now %&gt;&lt;/r:erb&gt;</code></pre>
+
+<p>produces something like:</p>
+
+<pre><code>Time is Tue Mar 08 09:34:26 +0000 2011</code></pre>
+
+<p>The return values of Rails calls <code>request</code> and <code>session</code> are made available as instance variables <code>@request</code> and <code>@session</code>.</p>
+
+<p>If producing output that can vary per-request, you will need to use a page type that bypasses the cache (such as "News").</p>
+
+<p>For more, please see <a href="http://www.ruby-doc.org/stdlib/libdoc/erb/rdoc/" target="_blank">ruby-doc.org</a>.</p>

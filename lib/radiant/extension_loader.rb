@@ -121,7 +121,7 @@ module Radiant
           paths(type)
         end
         define_method("add_#{type}_paths".to_sym) do |additional_paths|
-          ::ActiveSupport::Deprecation.warn("ExtensionLoader.add_#{type}_paths is has been moved and is deprecated. Please use Radiant.configuration.add_#{type}_paths", caller)
+          ::Rails.logger.warn("ExtensionLoader.add_#{type}_paths is has been moved and is deprecated. Please use Radiant.configuration.add_#{type}_paths", caller)
           initializer.configuration.send("add_#{type}_paths".to_sym, additional_paths)
         end
       end

@@ -1,7 +1,7 @@
 class PagePart < ApplicationRecord
 
   # Default Order
-  default_scope order: 'name ASC'
+  default_scope { order(name: :asc) }
 
   # Associations
   belongs_to :page

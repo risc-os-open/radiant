@@ -625,7 +625,7 @@
 * Fix typo in pngfix.js. [Mislav Marohnić]
 * Turn off auto-loading RSpec stuff, even in test environment. [Mislav Marohnić]
 * Add specs for Annotatable, InheritableClassAttributes, LocalTime, MethodObserver, and Simpleton. [Sean Cribbs]
-* Add spec for Radiant::AdminUI and Users scenario. [Sean Cribbs]
+* Add spec for Radiant::AdminUi and Users scenario. [Sean Cribbs]
 * Import and create boilerplate for RSpec and Scenarios. [Sean Cribbs]
 * Honor config.extensions when running rake test:extensions and also include core extensions. [Daniel Sheppard]
 * Propagate global page when using <r:content /> with inherit attribute. [Sean Cribbs]

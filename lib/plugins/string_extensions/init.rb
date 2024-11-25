@@ -1,1 +1,1 @@
-require 'string_extensions'
+require_relative 'lib/string_extensions'

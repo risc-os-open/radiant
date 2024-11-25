@@ -1,3 +1,7 @@
+# Define standard Radiant tags.
+#
+# Extension tags are loaded via 'config/application.rb'.
+#
 module StandardTags
 
   include Radiant::Taggable
@@ -879,6 +883,68 @@ module StandardTags
   end
 
   desc %{
+    Renders the snippet specified in the @name@ attribute within the context of a page.
+
+    *Usage:*
+
+    <pre><code><r:snippet name="snippet_name" /></code></pre>
+
+    When used as a double tag, the part in between both tags may be used within the
+    snippet itself, being substituted in place of @<r:yield/>@.
+
+    *Usage:*
+
+    <pre><code><r:snippet name="snippet_name">Lorem ipsum dolor...</r:snippet></code></pre>
+  }
+  tag 'snippet' do |tag|
+    if name = tag.attr['name']
+      if snippet = Snippet.find_by_name(name.strip)
+        tag.locals.yield = tag.expand if tag.double?
+        tag.globals.page.render_snippet(snippet)
+      else
+        raise TagError.new('snippet not found')
+      end
+    else
+      raise TagError.new("`snippet' tag must contain `name' attribute")
+    end
+  end
+
+  desc %{
+    Used within a snippet as a placeholder for substitution of child content, when
+    the snippet is called as a double tag.
+
+    *Usage (within a snippet):*
+
+    <pre><code>
+    <div id="outer">
+      <p>before</p>
+      <r:yield/>
+      <p>after</p>
+    </div>
+    </code></pre>
+
+    If the above snippet was named "yielding", you could call it from any Page,
+    Layout or Snippet as follows:
+
+    <pre><code><r:snippet name="yielding">Content within</r:snippet></code></pre>
+
+    Which would output the following:
+
+    <pre><code>
+    <div id="outer">
+      <p>before</p>
+      Content within
+      <p>after</p>
+    </div>
+    </code></pre>
+
+    When called in the context of a Page or a Layout, @<r:yield/>@ outputs nothing.
+  }
+  tag 'yield' do |tag|
+    tag.locals.yield
+  end
+
+  desc %{
     Inside this tag all page related tags refer to the page found at the @path@ attribute.
     @path@s may be relative or absolute paths.
 
@@ -972,7 +1038,7 @@ module StandardTags
     hash = tag.locals.navigation = {}
     tag.expand
     raise TagError.new("`navigation' tag must include a `normal' tag") unless hash.has_key? :normal
-    ActiveSupport::Deprecation.warn("The 'urls' attribute of the r:navigation tag has been deprecated in favour of 'paths'. Please update your site.") if tag.attr['urls']
+    Rails.logger.warn("The 'urls' attribute of the r:navigation tag has been deprecated in favour of 'paths'. Please update your site.") if tag.attr['urls']
     result = []
     pairs = (tag.attr['paths']||tag.attr['urls']).to_s.split('|').map do |pair|
       parts = pair.split(':')
@@ -1013,7 +1079,7 @@ module StandardTags
   end
   tag "navigation:url" do |tag|
     hash = tag.locals.navigation
-    ActiveSupport::Deprecation.warn("The 'r:navigation:url' tag has been deprecated in favour of 'r:navigation:path'. Please update your site.")
+    Rails.logger.warn("The 'r:navigation:url' tag has been deprecated in favour of 'r:navigation:path'. Please update your site.")
     hash[:path]
   end
 

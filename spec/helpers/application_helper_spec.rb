@@ -169,7 +169,7 @@ describe ApplicationHelper do
   end
 
   it "should provide the admin object" do
-    helper.admin.should == Radiant::AdminUI.instance
+    helper.admin.should == Radiant::AdminUi.instance
   end
 
   it "should return filter options for select" do

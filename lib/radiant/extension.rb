@@ -59,13 +59,13 @@ module Radiant
     end
     
     def admin
-      AdminUI.instance
+      AdminUi.instance
     end
     
     def tab(name, options={}, &block)
       @the_tab = admin.nav[name]
       unless @the_tab
-        @the_tab = Radiant::AdminUI::NavTab.new(name)
+        @the_tab = Radiant::AdminUi::NavTab.new(name)
         before = options.delete(:before)
         after = options.delete(:after)
         tab_name = before || after

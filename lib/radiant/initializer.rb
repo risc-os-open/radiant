@@ -186,21 +186,21 @@ module Radiant
     # Old extension-dependency mechanism now deprecated
     #
     def extension(ext)
-      ::ActiveSupport::Deprecation.warn("Extension dependencies have been deprecated and are no longer supported in radiant 1.0. Extensions with dependencies should be packaged as gems and use the .gemspec to declare them.", caller)
+      ::Rails.logger.warn("Extension dependencies have been deprecated and are no longer supported in radiant 1.0. Extensions with dependencies should be packaged as gems and use the .gemspec to declare them.", caller)
     end
 
     # Old gem-invogation method now deprecated
     #
     def gem(name, options = {})
-      ::ActiveSupport::Deprecation.warn("Please declare gem dependencies in your Gemfile (or for an extension, in the .gemspec file).", caller)
+      ::Rails.logger.warn("Please declare gem dependencies in your Gemfile (or for an extension, in the .gemspec file).", caller)
       super
     end
 
-    # Returns the AdminUI singleton, giving get-and-set access to the tabs and partial-sets it defines.
+    # Returns the AdminUi singleton, giving get-and-set access to the tabs and partial-sets it defines.
     # More commonly accessed in the initializer via its call to +configuration.admin+.
     #
     def admin
-      AdminUI.instance
+      AdminUi.instance
     end
 
     %w{controller model view metal plugin load eager_load}.each do |type|
@@ -405,7 +405,7 @@ module Radiant
       super
     end
 
-    # Returns the Radiant::AdminUI singleton so that the initializer can set up the admin interface.
+    # Returns the Radiant::AdminUi singleton so that the initializer can set up the admin interface.
     #
     def admin
       configuration.admin

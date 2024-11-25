@@ -122,6 +122,7 @@ GEM
     html-pipeline (3.2.0)
       selma (~> 0.1)
       zeitwerk (~> 2.5)
+    hubssolib (2.1.0)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
@@ -183,6 +184,7 @@ GEM
     rackup (2.1.0)
       rack (>= 3)
       webrick (~> 1.8)
+    radius (0.7.5)
     rails (7.2.1)
       actioncable (= 7.2.1)
       actionmailbox (= 7.2.1)
@@ -223,6 +225,8 @@ GEM
     reline (0.5.10)
       io-console (~> 0.5)
     rexml (3.3.8)
+    rss (0.3.1)
+      rexml
     rubyzip (2.3.2)
     securerandom (0.3.1)
     selenium-webdriver (4.25.0)
@@ -262,6 +266,7 @@ PLATFORMS
   aarch64-linux-gnu
   aarch64-linux-musl
   arm64-darwin-21
+  arm64-darwin-22
   x86_64-darwin
   x86_64-linux
   x86_64-linux-gnu
@@ -279,13 +284,16 @@ DEPENDENCIES
   github-markup (~> 5.0)
   haml-rails (~> 2.0)
   html-pipeline (= 3.2.0)
+  hubssolib (~> 2.0)
   jsbundling-rails
   pagy (~> 9.0)
   pg (~> 1.5.8)
   propshaft (~> 0.9)
   puma (>= 5.0)
+  radius (~> 0.7)
   rails (~> 7.2.0)
   rails_autolink (~> 1.1)
+  rss (~> 0.3)
   selenium-webdriver
   tzinfo-data
   web-console

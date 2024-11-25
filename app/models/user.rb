@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_many :pages, :foreign_key => :created_by_id
 
   # Default Order
-  default_scope :order => 'name'
+  default_scope { order(name: :asc) }
 
   # Associations
   belongs_to :created_by, :class_name => 'User'

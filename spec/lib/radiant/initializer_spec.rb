@@ -47,13 +47,13 @@ describe Radiant::ApplicationConfiguration do
     @configuration.enabled_extensions.should include(:routed)
   end
 
-  it "should have access to the AdminUI" do
-    @configuration.admin.should == Radiant::AdminUI.instance
+  it "should have access to the AdminUi" do
+    @configuration.admin.should == Radiant::AdminUi.instance
   end
 
   it "should deprecate the declaration of extension dependencies" do
-    ::ActiveSupport::Deprecation.silence do
-      ActiveSupport::Deprecation.should_receive(:warn).and_return(true)
+    ::Rails.logger.silence do
+      Rails.logger.should_receive(:warn).and_return(true)
       @configuration.extension('basic')
     end
   end
@@ -85,8 +85,8 @@ describe Radiant::ApplicationConfiguration do
 
   describe "#gem" do
     it "should be deprecated" do
-      ::ActiveSupport::Deprecation.silence do
-        ActiveSupport::Deprecation.should_receive(:warn).and_return(true)
+      ::Rails.logger.silence do
+        Rails.logger.should_receive(:warn).and_return(true)
         @configuration.gem 'radiant-gem_ext-extension'
         @configuration.extensions.should_not include(:gem_ext)
       end
@@ -132,12 +132,12 @@ describe Radiant::Initializer do
   end
 
   it "should initialize admin tabs" do
-    Radiant::AdminUI.instance.should_receive(:load_default_nav)
+    Radiant::AdminUi.instance.should_receive(:load_default_nav)
     @initializer.initialize_default_admin_tabs
   end
 
-  it "should have access to the AdminUI" do
-    @initializer.admin.should == Radiant::AdminUI.instance
+  it "should have access to the AdminUi" do
+    @initializer.admin.should == Radiant::AdminUi.instance
   end
 
   it "should load metal from RADIANT_ROOT and exensions" do

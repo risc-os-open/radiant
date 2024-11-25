@@ -71,7 +71,9 @@ class Admin::PagesController < Admin::ResourceController
     end
 
     def process_with_exception(page)
-      page.process(request, response)
+      result = page.process(self.session(), self.cookies(), self.request(), self.response())
+      render(html: result[:body], status: result[:status])
+
       @performed_render = true
       raise PreviewStop
     end
