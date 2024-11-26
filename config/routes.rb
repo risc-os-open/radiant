@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     resources :users
   end
 
+  get 'admin/pages/:id/remove', as: 'remove_admin_page', to: 'admin/pages#remove'
+
   post 'admin/preview', to: 'admin/pages#preview'
   put  'admin/preview', to: 'admin/pages#preview'
 

@@ -1,5 +1,5 @@
 class Admin::ResourceController < ApplicationController
-  extend Radiant::ResourceResponses
+  include ::ResourceResponsesConcern
 
   helper_method :model, :current_object, :models, :current_objects, :model_symbol, :plural_model_symbol, :model_class, :model_name, :plural_model_name
   before_action :populate_format
@@ -11,7 +11,7 @@ class Admin::ResourceController < ApplicationController
   cattr_reader :paginated
   cattr_accessor :default_per_page, :will_paginate_options
 
-  responses do |r|
+  declare_responses do |r|
     # Equivalent respond_to block for :plural responses:
     # respond_to do |wants|
     #   wants.xml { render :xml => models }
@@ -128,8 +128,7 @@ class Admin::ResourceController < ApplicationController
   # the per_page figure can be set in several ways:
   # request parameter > declared by paginate_models > default set in config entry @admin.pagination.per_page@ > overall default of 50
   def pagination_parameters
-    pp = params[:pp] || Radiant.configuration['admin.pagination.per_page']
-    pp = (self.class.default_per_page || 50) if pp.blank?
+    pp = params[:pp] || 20
     {
       :page  => (params[:p] || 1).to_i,
       :limit => pp.to_i
@@ -178,6 +177,8 @@ class Admin::ResourceController < ApplicationController
       instance_variable_set("@#{plural_model_symbol}", objects)
     end
     def load_models
+return model_class.all
+
       self.models = paginated? ? model_class.paginate(pagination_parameters) : model_class.all
     end
 

@@ -8,7 +8,7 @@ class Admin::PagesController < Admin::ResourceController
     end
   end
 
-  responses do |r|
+  declare_responses do |r|
     r.plural.js do
       @level = params[:level].to_i
       @template_name = 'index'

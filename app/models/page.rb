@@ -271,6 +271,10 @@ class Page < ApplicationRecord
     self.allowed_children_cache = allowed_children_lookup.collect(&:name).join(',')
   end
 
+  def allowed_children_cache
+    allowed_children_lookup.collect(&:name).join(',')
+  end
+
   class << self
 
     def root
@@ -295,7 +299,7 @@ class Page < ApplicationRecord
         @display_name = string
       else
         @display_name ||= begin
-          n = name.to_s
+          n = name.to_s.dup
           n.sub!(/^(.+?)Page$/, '\1')
           n.gsub!(/([A-Z])/, ' \1')
           n.strip
