@@ -29,10 +29,11 @@ Rails.application.routes.draw do
 
   # Admin other routes
   #
-  get 'admin',         as: 'admin',   to: 'admin/welcome#index'
-  get 'admin/welcome', as: 'welcome', to: 'admin/welcome#index'
-  get 'admin/login',   as: 'login',   to: 'admin/welcome#login'
-  get 'admin/logout',  as: 'logout',  to: 'admin/welcome#logout'
+  get  'admin',         as: 'admin',   to: 'admin/welcome#index'
+  get  'admin/welcome', as: 'welcome', to: 'admin/welcome#index'
+  get  'admin/login',   as: 'login',   to: 'admin/welcome#login'
+  post 'admin/login',                  to: 'admin/welcome#login'
+  get  'admin/logout',  as: 'logout',  to: 'admin/welcome#logout'
 
   # Site URLs
   #

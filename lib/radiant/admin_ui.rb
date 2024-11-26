@@ -18,7 +18,7 @@ module Radiant
       end
 
       def [](id)
-        unless id.kind_of? Fixnum
+        unless id.kind_of? Integer
           self.find {|subnav_item| subnav_item.name.to_s.titleize == id.to_s.titleize }
         else
           super
@@ -64,8 +64,8 @@ module Radiant
         end
       end
 
-      def visible?(user)
-        any? { |sub_item| sub_item.visible?(user) }
+      def visible?(user, action)
+        any? { |sub_item| sub_item.visible?(user, action) }
       end
 
       def deprecated_add(name, url, caller)
@@ -83,8 +83,8 @@ module Radiant
         @name, @url = name, url
       end
 
-      def visible?(user)
-        visible_by_controller?(user)
+      def visible?(user, action)
+        visible_by_controller?(user, action)
       end
 
       def relative_url
@@ -92,15 +92,12 @@ module Radiant
       end
 
       private
-      def visible_by_controller?(user)
-        params = ActionController::Routing::Routes.recognize_path(url, :method => :get)
-        if params && params[:controller]
-          klass = "#{params[:controller].camelize}Controller".constantize
-          klass.user_has_access_to_action?(user, params[:action])
-        else
-          false
+        def visible_by_controller?(user, action)
+          controller = "#{url}_controller".camelize.constantize rescue nil
+
+          controller.present? &&
+          controller.user_has_access_to_action?(user, action)
         end
-      end
     end
 
     include Simpleton
