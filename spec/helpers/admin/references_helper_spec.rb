@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Admin::ReferencesHelper do
-  class BasicFilter < TextFilter; end
-  class CustomFilter < TextFilter
+  class BasicFilter < ::Filters::TextFilter; end
+  class CustomFilter < ::Filters::TextFilter
     filter_name "Really Custom"
   end
 

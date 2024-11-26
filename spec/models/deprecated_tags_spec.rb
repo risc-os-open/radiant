@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe DeprecatedTags do
+describe Tags::DeprecatedTags do
 
   before do
     @page = Page.new(:slug => "/", :parent_id => nil, :title => 'Home')
@@ -9,7 +9,7 @@ describe DeprecatedTags do
     @escaped_keywords = PageField.new(:name => 'Keywords', :content => "sweet & harmonious biscuits")
     @escaped_description = PageField.new(:name => 'Description', :content => 'sweet & harmonious biscuits')
   end
-  
+
   describe "<r:meta>" do
     it "should render <meta> tags for the description and keywords" do
       @page.fields = [@keywords, @description]
@@ -112,11 +112,11 @@ describe DeprecatedTags do
       @page.should render('<r:rfc1123_date />').as('Wed, 11 Jan 2006 00:00:00 GMT')
     end
   end
-  
+
   describe "<r:navigation>" do
       it "should render with deprecated url attribute" do
       ::Rails.logger.silence do
-        lambda { 
+        lambda {
           @page.should render(%{
 <r:navigation urls="test:/test">
   <r:normal><li><a href="<r:url/>"><r:title/></a></li></r:normal>

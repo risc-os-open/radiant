@@ -1,7 +1,6 @@
 require 'acts_as_tree'
 
 class Page < ApplicationRecord
-
   class MissingRootPageError < StandardError
     def initialize(message = 'Database missing root page'); super end
   end
@@ -36,9 +35,27 @@ class Page < ApplicationRecord
 
   validate :valid_class_name
 
+  # Load all tags
+  #
   include Radiant::Taggable
-  include StandardTags
-  include DeprecatedTags
+
+  Dir.glob(Rails.root.join(__FILE__, '..', 'tags/*')).to_a.sort_by do | filename |
+    if filename.end_with?('standard_tags.rb')
+      0
+    elsif filename.end_with?('deprecated_tags.rb')
+      1
+    else
+      2
+    end
+  end.each do | filename |
+    require filename
+
+    leaf_name  = File.basename(filename)[..-4] # (remove 'rb')
+    new_module = "Tags::#{leaf_name.camelize}".constantize
+
+    include new_module
+  end
+
   include Annotatable
 
   annotate :description
@@ -151,7 +168,7 @@ class Page < ApplicationRecord
     self.request  = request   #  "
     self.response = response  #  "
 
-    set_response_headers(@response)
+    # set_response_headers(@response)
 
     return { body: render().html_safe(), status: response_code() }
   end
@@ -161,21 +178,21 @@ class Page < ApplicationRecord
     { }
   end
 
-  def set_response_headers(response)
-    set_content_type(response)
-    headers.each { |k,v| response.headers[k] = v }
-  end
-  private :set_response_headers
+  # def set_response_headers(response)
+  #   set_content_type(response)
+  #   headers.each { |k,v| response.headers[k] = v }
+  # end
+  # private :set_response_headers
 
-  def set_content_type(response)
-    if layout
-      content_type = layout.content_type.to_s.strip
-      if content_type.present?
-        response.headers['Content-Type'] = content_type
-      end
-    end
-  end
-  private :set_content_type
+  # def set_content_type(response)
+  #   if layout
+  #     content_type = layout.content_type.to_s.strip
+  #     if content_type.present?
+  #       response.headers['Content-Type'] = content_type
+  #     end
+  #   end
+  # end
+  # private :set_content_type
 
   def response_code
     200

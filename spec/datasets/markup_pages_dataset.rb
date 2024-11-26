@@ -1,10 +1,10 @@
-class PseudoTextileFilter < TextFilter
+class PseudoTextileFilter < ::Filters::TextFilter
   def filter(text)
     text + ' - Filtered with TEXTILE!'
   end
 end
 
-class PseudoMarkdownFilter < TextFilter
+class PseudoMarkdownFilter < ::Filters::TextFilter
   def filter(text)
     text + ' - Filtered with MARKDOWN!'
   end
@@ -12,7 +12,7 @@ end
 
 class MarkupPagesDataset < Dataset::Base
   uses :home_page
-  
+
   def load
     create_page "Textile" do
       create_page_part :textile_body, :name => "body", :filter_id => "Pseudo Textile", :content => "Some *Textile* content."
@@ -21,5 +21,5 @@ class MarkupPagesDataset < Dataset::Base
       create_page_part :markdown_body, :name => "body", :filter_id => "Pseudo Markdown", :content => "Some **Markdown** content."
     end
   end
-  
+
 end

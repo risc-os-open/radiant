@@ -22,7 +22,7 @@ describe PagePart do
 
   it "shouldn't override existing page_parts filters with the default filter" do
     part = PagePart.find(:first, :conditions => {:filter_id => nil})
-    selected_filter_name = TextFilter.descendants.first.filter_name
+    selected_filter_name = ::Filters::TextFilter.descendants.first.filter_name
     Radiant::Configuration['defaults.page.filter'] = selected_filter_name
     part.reload
     part.filter_id.should_not == selected_filter_name

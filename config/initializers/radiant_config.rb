@@ -10,7 +10,7 @@ if CONFIGURED_DATABASE_AVAILABLE
     config.define 'defaults.locale', :select_from => lambda { Radiant::AvailableLocales.locales }, :allow_blank => true
     config.define 'defaults.page.parts', :default => "Body,Extended"
     config.define 'defaults.page.status', :select_from => lambda { Status.selectable_values }, :allow_blank => false, :default => "Draft"
-    config.define 'defaults.page.filter', :select_from => lambda { TextFilter.descendants.map { |s| s.filter_name }.sort }, :allow_blank => true
+    config.define 'defaults.page.filter', :select_from => lambda { ::Filters::TextFilter.descendants.map { |s| s.filter_name }.sort }, :allow_blank => true
     config.define 'defaults.page.fields'
     config.define 'admin.pagination.per_page', :type => :integer, :default => 50
     config.define 'site.title', :default => "Your site title", :allow_blank => false

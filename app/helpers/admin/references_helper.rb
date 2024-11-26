@@ -36,7 +36,7 @@ module Admin::ReferencesHelper
 
   def filter
     @filter ||= begin
-      TextFilter.find_descendant(params[:filter_name])
+      ::Filters::TextFilter.find_descendant(params[:filter_name])
     end
   end
 

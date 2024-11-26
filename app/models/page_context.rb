@@ -32,7 +32,7 @@ class PageContext < Radius::Context
   def tag_missing(name, attributes = {}, &block)
     super
   rescue Radius::UndefinedTagError => e
-    raise StandardTags::TagError.new(e.message)
+    raise Tags::StandardTags::TagError.new(e.message)
   end
 
   private

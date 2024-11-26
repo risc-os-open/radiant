@@ -1,4 +1,5 @@
 class Snippet < ApplicationRecord
+  include FilterableConcern
 
   # Default Order
   default_scope { order(name: :asc) }
@@ -13,7 +14,4 @@ class Snippet < ApplicationRecord
   validates_length_of :filter_id, maximum: 25, allow_nil: true
   validates_format_of :name, with: %r{\A\S*\z}
   validates_uniqueness_of :name
-
-  object_id_attr :filter, TextFilter
-
 end

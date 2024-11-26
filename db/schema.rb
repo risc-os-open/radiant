@@ -1,142 +1,111 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209231801) do
+ActiveRecord::Schema[7.2].define(version: 2009_10_03_095744) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
-  create_table "assets", :force => true do |t|
-    t.string   "caption"
-    t.string   "title"
-    t.string   "asset_file_name"
-    t.string   "asset_content_type"
-    t.integer  "asset_file_size"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "original_width"
-    t.integer  "original_height"
-    t.string   "original_extension"
+  create_table "config", id: :serial, force: :cascade do |t|
+    t.string "key", limit: 40, default: "", null: false
+    t.text "value", default: ""
+    t.index ["key"], name: "key", unique: true
   end
 
-  create_table "config", :force => true do |t|
-    t.string "key",   :limit => 40, :default => "", :null => false
-    t.string "value",               :default => ""
+  create_table "extension_meta", id: :serial, force: :cascade do |t|
+    t.text "name"
+    t.integer "schema_version", default: 0
+    t.boolean "enabled", default: true
   end
 
-  add_index "config", ["key"], :name => "key", :unique => true
-
-  create_table "extension_meta", :force => true do |t|
-    t.string  "name"
-    t.integer "schema_version", :default => 0
-    t.boolean "enabled",        :default => true
+  create_table "layouts", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 100
+    t.text "content"
+    t.string "content_type", limit: 40
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.integer "lock_version", default: 0
   end
 
-  create_table "layouts", :force => true do |t|
-    t.string   "name",          :limit => 100
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.string   "content_type",  :limit => 40
-    t.integer  "lock_version",                 :default => 0
-  end
-
-  create_table "page_attachments", :force => true do |t|
-    t.integer "asset_id"
+  create_table "page_parts", id: :serial, force: :cascade do |t|
+    t.text "name"
+    t.string "filter_id", limit: 25
+    t.text "content"
     t.integer "page_id"
-    t.integer "position"
+    t.index ["page_id", "name"], name: "parts_by_page"
   end
 
-  create_table "page_fields", :force => true do |t|
-    t.integer "page_id"
-    t.string  "name"
-    t.string  "content"
+  create_table "pages", id: :serial, force: :cascade do |t|
+    t.string "title", limit: 255
+    t.string "slug", limit: 100
+    t.string "breadcrumb", limit: 160
+    t.integer "parent_id"
+    t.integer "layout_id"
+    t.string "class_name", limit: 25
+    t.integer "status_id", default: 1, null: false
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "published_at", precision: nil
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.boolean "virtual", default: false, null: false
+    t.integer "lock_version", default: 0
+    t.string "description", limit: 255
+    t.string "keywords", limit: 255
+    t.index ["class_name"], name: "pages_class_name"
+    t.index ["parent_id"], name: "pages_parent_id"
+    t.index ["slug", "parent_id"], name: "pages_child_slug"
+    t.index ["virtual", "status_id"], name: "pages_published"
   end
 
-  add_index "page_fields", ["page_id", "name", "content"], :name => "index_page_fields_on_page_id_and_name_and_content"
-
-  create_table "page_parts", :force => true do |t|
-    t.string  "name",      :limit => 100
-    t.string  "filter_id", :limit => 25
-    t.text    "content"
-    t.integer "page_id"
+  create_table "sessions", id: :serial, force: :cascade do |t|
+    t.string "session_id", limit: 255
+    t.text "data"
+    t.datetime "updated_at", precision: nil
+    t.index ["session_id"], name: "index_sessions_on_session_id"
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  add_index "page_parts", ["page_id", "name"], :name => "parts_by_page"
-
-  create_table "pages", :force => true do |t|
-    t.string   "title"
-    t.string   "slug",                   :limit => 100
-    t.string   "breadcrumb",             :limit => 160
-    t.string   "class_name",             :limit => 25
-    t.integer  "status_id",                              :default => 1,     :null => false
-    t.integer  "parent_id"
-    t.integer  "layout_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "published_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.boolean  "virtual",                                :default => false, :null => false
-    t.integer  "lock_version",                           :default => 0
-    t.text     "allowed_children_cache", :limit => 1500, :default => ""
+  create_table "snippets", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 100, default: "", null: false
+    t.string "filter_id", limit: 25
+    t.text "content"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.string "auto_export", limit: 512
+    t.string "change_exec", limit: 512
+    t.integer "lock_version", default: 0
+    t.index ["name"], name: "name", unique: true
   end
 
-  add_index "pages", ["class_name"], :name => "altered_pages_class_name"
-  add_index "pages", ["parent_id"], :name => "altered_pages_parent_id"
-  add_index "pages", ["slug", "parent_id"], :name => "altered_pages_child_slug"
-  add_index "pages", ["virtual", "status_id"], :name => "altered_pages_published"
-
-  create_table "sessions", :force => true do |t|
-    t.string   "session_id"
-    t.text     "data"
-    t.datetime "updated_at"
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 100
+    t.string "email", limit: 255
+    t.string "login", limit: 40, default: "", null: false
+    t.string "password", limit: 40
+    t.boolean "admin", default: false, null: false
+    t.boolean "designer", default: false, null: false
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "created_by_id"
+    t.integer "updated_by_id"
+    t.text "notes"
+    t.integer "lock_version", default: 0
+    t.string "salt", limit: 255
+    t.string "session_token", limit: 255
+    t.string "locale", limit: 255
+    t.index ["login"], name: "login", unique: true
   end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
-  create_table "snippets", :force => true do |t|
-    t.string   "name",          :limit => 100, :default => "", :null => false
-    t.string   "filter_id",     :limit => 25
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",                 :default => 0
-  end
-
-  add_index "snippets", ["name"], :name => "name", :unique => true
-
-  create_table "users", :force => true do |t|
-    t.string   "name",          :limit => 100
-    t.string   "email"
-    t.string   "login",         :limit => 40,  :default => "",    :null => false
-    t.string   "password",      :limit => 40
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.boolean  "admin",                        :default => false, :null => false
-    t.boolean  "designer",                     :default => false, :null => false
-    t.text     "notes"
-    t.integer  "lock_version",                 :default => 0
-    t.string   "salt"
-    t.string   "session_token"
-    t.string   "locale"
-  end
-
-  add_index "users", ["login"], :name => "login", :unique => true
-
 end

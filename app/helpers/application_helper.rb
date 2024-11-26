@@ -145,7 +145,7 @@ module ApplicationHelper
   end
 
   def filter_options_for_select(selected=nil)
-    options_for_select([[t('select.none'), '']] + TextFilter.descendants_names, selected)
+    options_for_select([[t('select.none'), '']] + ::Filters::TextFilter.descendants_names, selected)
   end
 
   def body_classes
