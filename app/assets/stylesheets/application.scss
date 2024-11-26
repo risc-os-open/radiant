@@ -1,28 +1,6 @@
 // Main stylesheet for the Radiant admin interface, or whenever something is
 // rendered that isn't using a database-hosted layout (e.g. an exception page).
 
-// Common Variables and Modules
-@import "admin/base";
-
-//@include global-reset;
-
-// Partials
-@import "admin/partials/typography";
-@import "admin/partials/layout";
-@import "admin/partials/header";
-@import "admin/partials/avatars";
-@import "admin/partials/dropdown";
-@import "admin/partials/messages";
-@import "admin/partials/forms";
-@import "admin/partials/index";
-@import "admin/partials/content";
-@import "admin/partials/actions";
-@import "admin/partials/footer";
-@import "admin/partials/popup";
-@import "admin/partials/tabcontrol";
-@import "admin/partials/dateinput";
-@import "admin/partials/toolbar";
-@import "admin/partials/validations";
-
-// Deprecated
-@import "admin/partials/deprecated";
+@import "admin/variables";
+@import "admin/modules";
+@import "admin/partials";
