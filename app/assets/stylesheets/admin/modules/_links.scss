@@ -1,21 +1,24 @@
 @mixin default-link {
   color: $base-link-color;
   text-decoration: underline;
-  &:hover
+  &:hover {
     text-decoration: none;
+  }
 }
 
 @mixin alt-link {
   color: $alt-link-color;
   text-decoration: underline;
-  &:hover
+  &:hover {
     text-decoration: none;
+  }
 }
 
 @mixin plain-link {
-  color: #333:
+  color: #333;
   text-decoration: none;
-  &:hover
+  &:hover {
     text-decoration: underline;
     color: $base-link-color;
+  }
 }

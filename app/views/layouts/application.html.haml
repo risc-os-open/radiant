@@ -5,7 +5,7 @@
     %title= @page_title || default_page_title
     - @stylesheets.uniq.each do |stylesheet|
       = stylesheet_link_tag stylesheet
-    %script{:type=>"text/javascript"}="var relative_url_root = '#{ActionController::Base.relative_url_root}';"
+    %script{:type=>"text/javascript"}="var relative_url_root = '#{ActionController::Base.relative_url_root}';".html_safe
     - @javascripts.uniq.each do |javascript|
       = javascript_include_tag javascript
     = yield :meta
@@ -37,7 +37,7 @@
           #error
             %p= flash[:error]
         #content
-          = find_and_preserve(yield)
+          = yield
 
       - if @content_for_popups
         #popups

@@ -98,7 +98,7 @@ div.popup {
         background: linear-gradient(#ccc 0%, #ddd 15%, #eee 100%);
       }
 
-      &.default:active
+      &.default:active {
         border: 1px solid #002c86;
         background: linear-gradient(#4794c1, #78b9e1);
       }

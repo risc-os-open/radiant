@@ -2,16 +2,16 @@
   border: 1px solid #b3b3b3;
   border-top: 1px solid #c3c3c3;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-  @include border-top-right-radius;
-  @include border-bottom-radius;
+  border-radius: 5px;
+  border-top-left-radius: 0;
 }
 
 ul.menu {
   background: white;
   font-size: 80%;
   padding: 5px 20px;
-  @include border-top-right-radius;
-  @include border-bottom-radius;
+  border-radius: 5px;
+  border-top-left-radius: 0;
 
   li {
     margin: 0 -20px;

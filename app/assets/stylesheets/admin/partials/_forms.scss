@@ -224,7 +224,6 @@
   position: relative;
   margin: 3px 0 20px;
   border-radius: 8px;
-  @include pie-clearfix;
 
   * {
     position: relative;
@@ -242,6 +241,12 @@
     overflow: hidden;
     left: 0;
     top: 0;
+  }
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
   h3 {
@@ -276,7 +281,7 @@
     padding: 0.5em 0;
 
     &:last-child {
-      border: none:
+      border: none;
     }
   }
 

@@ -1,9 +1,9 @@
 @mixin button-shadow {
-  @include single-box-shadow(#555, 1px, 2px, 3px);
+  box-shadow: 1px 2px 3px #555;
 }
 
 @mixin no-button-shadow {
-  @include single-box-shadow(#555,0,0,0);
+  box-shadow: 0 0 0 #555;
 }
 
 #actions {

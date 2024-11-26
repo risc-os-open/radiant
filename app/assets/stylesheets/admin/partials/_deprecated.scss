@@ -57,7 +57,7 @@ div.popup h3.title {
       text-shadow: 1px 1px 1px #fff;
     }
 
-    &:active
+    &:active {
       background: #fff;
       @include no-button-shadow;
       color: black;

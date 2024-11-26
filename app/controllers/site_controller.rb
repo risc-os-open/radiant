@@ -43,6 +43,7 @@ class SiteController < ApplicationController
   end
 
   private
+
     def batch_page_status_refresh
       batch = Page
         .where(status_id: Status[:scheduled].id)

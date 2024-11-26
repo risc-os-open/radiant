@@ -1,3 +1,3 @@
 web: unset PORT && bundle exec bin/rails server
-jav: yarn dev:build --watch
-app: yarn dev:build:css:app --watch
+jav: yarn dev:build:js --watch
+css: yarn dev:build:css --watch

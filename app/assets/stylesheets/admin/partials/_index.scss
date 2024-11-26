@@ -9,10 +9,10 @@
 }
 
 table.index {
-  font-size: 90%
-  margin-bottom: 2em
-  width: 100%
-  border-bottom: 1px solid white
+  font-size: 90%;
+  margin-bottom: 2em;
+  width: 100%;
+  border-bottom: 1px solid white;
 
   th {
     text-align: left;
@@ -59,7 +59,7 @@ table.index {
         background: linear-gradient(#fff, #ccc);
         border: 1px solid #a5c9df;
         margin: 0 24px 0 0;
-        @include border-radius;
+        border-radius: 5px;
       }
 
       &.selected {
@@ -67,9 +67,9 @@ table.index {
         background: linear-gradient(#e5f5ff, #c5e0ff);
         border: 1px solid #a5c9df;
         margin: 0 24px 0 0;
-        @include border-top-radius;
+        border-radius: 5px;
         border-bottom-left-radius: 0;
-        border-bottom-bottom-radius: 0;
+        border-bottom-right-radius: 0;
       }
     }
 

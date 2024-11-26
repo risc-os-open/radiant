@@ -1,15 +1,28 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+// Main stylesheet for the Radiant admin interface, or whenever something is
+// rendered that isn't using a database-hosted layout (e.g. an exception page).
+
+// Common Variables and Modules
+@import "admin/base";
+
+//@include global-reset;
+
+// Partials
+@import "admin/partials/typography";
+@import "admin/partials/layout";
+@import "admin/partials/header";
+@import "admin/partials/avatars";
+@import "admin/partials/dropdown";
+@import "admin/partials/messages";
+@import "admin/partials/forms";
+@import "admin/partials/index";
+@import "admin/partials/content";
+@import "admin/partials/actions";
+@import "admin/partials/footer";
+@import "admin/partials/popup";
+@import "admin/partials/tabcontrol";
+@import "admin/partials/dateinput";
+@import "admin/partials/toolbar";
+@import "admin/partials/validations";
+
+// Deprecated
+@import "admin/partials/deprecated";
