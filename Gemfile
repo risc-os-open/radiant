@@ -35,7 +35,7 @@ gem 'jsbundling-rails' # ...using whatever version Rails wants
 # Rails 7+ 'modern' asset pipeline:
 # https://rubygems.org/gems/propshaft
 #
-gem 'propshaft', '~> 0.9'
+gem 'propshaft', '~> 1.1'
 
 # https://rubygems.org/gems/haml-rails
 #

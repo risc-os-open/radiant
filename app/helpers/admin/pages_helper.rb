@@ -1,15 +1,15 @@
 module Admin::PagesHelper
   include Admin::NodeHelper
   include Admin::ReferencesHelper
-  
+
   def class_of_page
-    @page.class
+    @page.nil? ? super : @page.class
   end
-  
+
   def filter
     @page.parts.empty? ? nil : @page.parts.first.filter
   end
-  
+
   def meta_errors?
     !!(@page.errors[:slug] or @page.errors[:breadcrumb])
   end
@@ -28,7 +28,7 @@ module Admin::PagesHelper
   end
 
   def page_edit_javascripts
-    <<-CODE
+    code = <<-CODE
     function addPart(form) {
        if (validPartName()) {
         new Ajax.Updater(
@@ -113,5 +113,7 @@ module Admin::PagesHelper
       return false;
     }
     CODE
+
+    return code.html_safe()
   end
 end

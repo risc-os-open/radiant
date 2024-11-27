@@ -194,14 +194,14 @@ describe Admin::PagesController do
   end
 
   describe '#preview' do
-    
+
     let(:preview_page){ pages(:home) }
     let(:body_id){ preview_page.part('body').id }
-    let(:preview_params){ 
-      {'page' => { 
+    let(:preview_params){
+      {'page' => {
         'title' => 'BOGUS',
-        'id' => preview_page.id.to_s, 
-        'parts_attributes' => [{'content' => 'TEST', 'id' => body_id.to_s}] } } 
+        'id' => preview_page.id.to_s,
+        'parts_attributes' => [{'content' => 'TEST', 'id' => body_id.to_s}] } }
     }
     it 'should render the page with changes' do
       request.stub!(:referer).and_return("/admin/pages/#{preview_page.id}/edit")
@@ -250,12 +250,12 @@ describe Admin::PagesController do
       assigns(:meta).should be_kind_of(Array)
       assigns(:buttons_partials).should be_kind_of(Array)
     end
-  
+
     it "should set the parent_id from the parameters" do
       get :new, :page_id => page_id(:home)
       assigns(:page).parent_id.should == page_id(:home)
     end
-  
+
     it "should set the @page variable" do
       home = pages(:home)
       new_page = home.class.new_with_defaults
@@ -293,7 +293,7 @@ describe Admin::PagesController do
       final_updated_at = pages(:home).updated_at
       lambda{ next_updated_at <=> final_updated_at }.should be_true
     end
-    
+
     if RUBY_VERSION =~ /1\.9/
       it 'should convert form input to UTF-8' do
         # When using Radiant with Ruby 1.9, the strings that come in from forms are ASCII-8BIT encoded.
@@ -302,14 +302,14 @@ describe Admin::PagesController do
         # See http://stackoverflow.com/questions/8268778/rails-2-3-9-encoding-of-query-parameters
         # See https://rails.lighthouseapp.com/projects/8994/tickets/4807
         # See http://jasoncodes.com/posts/ruby19-rails2-encodings
-      
+
         put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', :parts_attributes => {'0' => {:id => pages(:home).parts[0].id, :content => 'Ümlautö'.force_encoding('ASCII-8BIT')}}} and sleep(1)
         params['page']['parts_attributes']['0']['content'].encoding.to_s.should == 'UTF-8'
         params['page']['parts_attributes']['0']['content'].should == 'Ümlautö'
       end
     end
   end
-  
+
   it "should initialize meta and buttons_partials in edit action" do
     get :edit, :id => page_id(:home)
     response.should be_success
@@ -344,7 +344,7 @@ describe Admin::PagesController do
   protected
 
     def assert_rendered_nodes_where(&block)
-      wanted, unwanted = Page.find(:all).partition(&block)
+      wanted, unwanted = Page.all.partition(&block)
       wanted.each do |page|
         response.should have_tag("tr[id=page_#{page.id}]")
       end

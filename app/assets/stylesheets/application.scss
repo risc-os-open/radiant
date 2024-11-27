@@ -2,5 +2,9 @@
 // rendered that isn't using a database-hosted layout (e.g. an exception page).
 
 @import "admin/variables";
+
+@import "compass/compass";
+@include global-reset;
+
 @import "admin/modules";
 @import "admin/partials";

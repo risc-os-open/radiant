@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe Radiant::ExtensionMigrator do
-  
+
   class Person < ApplicationRecord; end
   class Place < ApplicationRecord; end
 
@@ -9,26 +9,26 @@ describe Radiant::ExtensionMigrator do
     ActiveRecord::Base.connection.delete("DELETE FROM schema_migrations WHERE version LIKE 'Basic-%' OR version LIKE 'Upgrading-%' OR version LIKE 'Replacing-%'")
     ActiveRecord::Base.connection.delete("DELETE FROM extension_meta WHERE name = 'Upgrading'")
   end
-  
+
   it 'should migrate new style migrations successfully' do
     ActiveRecord::Migration.suppress_messages do
       BasicExtension.migrator.migrate
     end
     BasicExtension.migrator.get_all_versions.should == [200812131420,200812131421]
-    lambda { Person.find(:all) }.should_not raise_error
-    lambda { Place.find(:all) }.should_not raise_error
+    lambda { Person.all }.should_not raise_error
+    lambda { Place.all }.should_not raise_error
     ActiveRecord::Migration.suppress_messages do
       BasicExtension.migrator.migrate(0)
     end
     BasicExtension.migrator.get_all_versions.should == []
   end
-  
+
   it 'should migrate extensions with unusual names' do
     ActiveRecord::Migration.suppress_messages do
       SpecialCharactersExtension.migrator.migrate
     end
     SpecialCharactersExtension.migrator.get_all_versions.should == [1]
-    lambda { Person.find(:all) }.should_not raise_error
+    lambda { Person.all }.should_not raise_error
     ActiveRecord::Migration.suppress_messages do
       SpecialCharactersExtension.migrator.migrate(0)
     end

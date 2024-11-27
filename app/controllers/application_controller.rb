@@ -91,6 +91,7 @@ class ApplicationController < ActionController::Base
       @stylesheets ||= []
       @stylesheets.concat %w(application)
       @javascripts ||= []
+      @javascripts.concat %w(application)
     end
 
     def set_standard_body_style
@@ -107,6 +108,9 @@ class ApplicationController < ActionController::Base
     def on_error_rotate_and_raise(exception)
       hubssolib_get_session_proxy()
       hubssolib_afterwards()
+
+      Rails.logger.debug(exception.message)
+      Rails.logger.debug(exception.backtrace.join("\n"))
 
       if session[:last_exception_at].present?
         last_at = Time.parse(session[:last_exception_at]) rescue nil

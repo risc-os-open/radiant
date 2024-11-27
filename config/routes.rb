@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     resources :page_parts
     resources :page_fields
 
-    get '/reference/:type.:format', as: 'reference', to: 'references#show'
+    get '/reference/:type', as: 'reference', to: 'references#show'
   end
 
   # Admin other routes

@@ -1,5 +1,4 @@
 module Admin::NodeHelper
-
   def render_node(page, locals = {})
     @current_node = page
     page.extend MenuRenderer
@@ -46,51 +45,57 @@ module Admin::NodeHelper
   def children_class
     unless @current_node.children.empty?
       if expanded
-        " children_visible"
+        ' children_visible'
       else
-        " children_hidden"
+        ' children_hidden'
       end
     else
-      " no_children"
+      ' no_children'
     end
   end
 
   def virtual_class
-    @current_node.virtual? ? " virtual": ""
+    @current_node.virtual? ? ' virtual': ''
   end
 
   def expander(level)
-    unless @current_node.children.empty? or level == 0
-      image((expanded ? "collapse" : "expand"),
-            :class => "expander", :alt => 'toggle children',
-            :title => '')
+    if @current_node.children.empty? || level == 0
+      ''.html_safe()
     else
-      ""
+      image(
+        expanded ? 'collapse' : 'expand',
+        class:               'expander',
+        alt:                 'Toggle children',
+        'data-after-toggle': image_path(expanded ? 'admin/expand.png' : 'admin/collapse.png')
+      )
     end
   end
 
   def icon
     icon_name = @current_node.virtual? ? 'virtual_page' : 'page'
-    image(icon_name, :class => "icon", :alt => '', :title => '')
+    image(icon_name, class: 'icon')
   end
 
   def node_title
-    %{<span class="title">#{ h(@current_node.title) }</span>}
+    tag.span(@current_node.title, class: 'title')
   end
 
   def page_type
     display_name = @current_node.class.display_name
+
     if display_name == 'Page'
-      ""
+      ''.html_safe()
     else
-      %{<span class="info">(#{ h(display_name) })</span>}
+      tag.span(display_name, class: 'info')
     end
   end
 
   def spinner
-    image('spinner.gif',
-            :class => 'busy', :id => "busy_#{@current_node.id}",
-            :alt => "",  :title => "",
-            :style => 'display: none;')
+    image(
+      'spinner.gif',
+      class: 'busy',
+      id:    "busy_#{@current_node.id}",
+      style: 'display: none;'
+    )
   end
 end

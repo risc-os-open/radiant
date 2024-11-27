@@ -3,13 +3,14 @@
   "private": true,
   "dependencies": {
     "@rails/ujs": "^7.0.8",
-    "esbuild": "^0.14",
+    "nodemon": "^3.1",
     "sass": "^1.68.0"
   },
   "scripts": {
-    "build:js": "esbuild app/javascript/*.* --bundle --minify --outdir=app/assets/builds",
+    "build:js": "cat app/javascript/libraries/prototype.js app/javascript/libraries/lowpro.js app/javascript/libraries/effects.js app/javascript/libraries/controls.js app/javascript/libraries/dragdrop.js app/javascript/admin/codearea.js app/javascript/admin/cookie.js app/javascript/admin/dateinput.js app/javascript/admin/dropdown.js app/javascript/admin/page_preview.js app/javascript/admin/pagefield.js app/javascript/admin/pagestatus.js app/javascript/admin/popup.js app/javascript/admin/ruledtable.js app/javascript/admin/shortcuts.js app/javascript/admin/sitemap.js app/javascript/admin/status.js app/javascript/admin/tabcontrol.js app/javascript/admin/toggle.js app/javascript/admin/utility.js app/javascript/admin/validationerror.js app/javascript/admin/admin.js > app/assets/builds/application.js",
     "build:css": "sass ./app/assets/stylesheets/application.scss ./app/assets/builds/application.css --silence-deprecation=import --no-source-map --style compressed --load-path=node_modules",
-    "dev:build:js": "esbuild app/javascript/*.* --bundle --minify --sourcemap --outdir=app/assets/builds",
+    "dev:build:js:foo": "esbuild --bundle app/javascript/application.js --inject:app/javascript/libraries/prototype.js --inject:app/javascript/libraries/lowpro.js --inject:app/javascript/libraries/effects.js --inject:app/javascript/libraries/controls.js --inject:app/javascript/libraries/dragdrop.js --sourcemap --outdir=app/assets/builds",
+    "dev:build:js": "nodemon --watch app/javascript -x \"npm run build:js\"",
     "dev:build:css": "sass ./app/assets/stylesheets/application.scss ./app/assets/builds/application.css --silence-deprecation=import --embed-sources --style compressed --load-path=node_modules"
   }
 }

@@ -6,6 +6,8 @@
  *
  *--------------------------------------------------------------------------*/
 
+var FoolEsBuild = { };
+
 var Prototype = {
   Version: '1.6.1',
 
@@ -1654,6 +1656,8 @@ Ajax.Updater = Class.create(Ajax.Request, {
       if (options.insertion) {
         if (Object.isString(options.insertion)) {
           var insertion = { }; insertion[options.insertion] = responseText;
+          console.log(receiver);
+          console.log(insertion);
           receiver.insert(insertion);
         }
         else options.insertion(receiver, responseText);
@@ -1730,7 +1734,7 @@ if (Prototype.BrowserFeatures.XPath) {
 
 /*--------------------------------------------------------------------------*/
 
-if (!window.Node) var Node = { };
+var Node = window.Node || { };
 
 if (!Node.ELEMENT_NODE) {
   Object.extend(Node, {

@@ -588,11 +588,11 @@ describe "Standard Tags" do
     end
 
     it "should render the default avatar when the user has not set an email address" do
-      page.should render('<r:gravatar name="Designer" />').as('/images/admin/avatar_32x32.png')
+      page.should render('<r:gravatar name="Designer" />').as('/assets/admin/avatar_32x32.png')
     end
 
     it "should render the specified size" do
-      page.should render('<r:gravatar name="Designer" size="96px" />').as('/images/admin/avatar_96x96.png')
+      page.should render('<r:gravatar name="Designer" size="96px" />').as('/assets/admin/avatar_96x96.png')
     end
 
     it "should render the specified rating" do

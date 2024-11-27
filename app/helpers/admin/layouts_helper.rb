@@ -1,6 +1,6 @@
 module Admin::LayoutsHelper
   def layout_edit_javascripts
-    <<-CODE
+    code = <<-CODE
     var tagReferenceWindows = {};
     function loadTagReference() {
       var pageType = 'Page';
@@ -17,5 +17,7 @@ module Admin::LayoutsHelper
       return false;
     }
     CODE
+
+    return code.html_safe()
   end
 end

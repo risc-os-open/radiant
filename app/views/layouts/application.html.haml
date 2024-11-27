@@ -8,6 +8,7 @@
     %script{:type=>"text/javascript"}="var relative_url_root = '#{ActionController::Base.relative_url_root}';".html_safe
     - @javascripts.uniq.each do |javascript|
       = javascript_include_tag javascript
+    = javascript_tag(yield :page_scripts)
     = yield :meta
   %body{:class=>body_classes.join(" ")}
     #page
