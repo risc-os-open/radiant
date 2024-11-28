@@ -41,7 +41,7 @@
           .actions
             = button_to t("edit_configuration"), edit_admin_configuration_url, method: :get
         Configuration
-      - Radiant::Configuration.pluck(:key).each do |site_setting|
+      - Radiant::Configuration.order(key: :asc).pluck(:key).each do |site_setting|
         %p.ruled
           = show_config site_setting, :class => (site_setting =~ /host$/ ? 'uri' : nil)
     - config.users {}

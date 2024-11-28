@@ -48,10 +48,12 @@ en:
     defaults:
       locale: 'default language'
       page:
-        fields: "page fields"
-        filter: "page filter"
-        parts: "page parts"
-        status: "page status"
+        fields: "default page fields"
+        filter: "default page filter"
+        parts: "default page parts"
+        status: "default page status"
+      snippet:
+        filter: "default snippet filter"
     dev:
       host: "dev site domain"
     local:
