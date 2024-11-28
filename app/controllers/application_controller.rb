@@ -84,7 +84,12 @@ class ApplicationController < ActionController::Base
     end
 
     def set_timezone
-      Time.zone = Radiant::Configuration['local.timezone'] || Time.zone_default
+      zone = Radiant::Configuration['local.timezone']
+      zone = Time.zone_default if zone.blank?
+
+      Time.zone = zone
+    rescue ArgumentError
+      Time.zone = 'UTC'
     end
 
     def set_javascripts_and_stylesheets

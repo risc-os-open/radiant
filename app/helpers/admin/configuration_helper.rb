@@ -40,16 +40,13 @@ module Admin::ConfigurationHelper
     setting = setting_for(key)
     domkey = key.gsub(/\W/, '_')
     name = "config[#{key}]"
-    title = t("config.#{key}", default: config).titlecase.html_safe()
+    title = t("config.#{key}", default: config).titlecase
     value = params[key.to_sym].nil? ? setting.value : params[key.to_sym]
     html = ''.html_safe()
     if setting.boolean?
       html << hidden_field_tag(name, 0)
       html << check_box_tag(name, 1, value, :class => 'setting', :id => domkey)
       html << tag.label(title, :class => 'checkbox', :for => domkey)
-    elsif setting.selector?
-      html << tag.label(title, :for => domkey)
-      html << select_tag(name, options_for_select(setting.definition.selection, value), :class => 'setting', :id => domkey)
     else
       html << tag.label(title, :for => domkey)
       html << text_field_tag(name, value, :class => 'textbox', :id => domkey)

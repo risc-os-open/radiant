@@ -100,7 +100,6 @@ module Radiant
     def value=(param)
       newvalue = param.to_s
       if newvalue != self[:value]
-        raise ConfigError, "#{self.key} cannot be changed" unless settable? || self[:value].blank?
         if boolean?
           self[:value] = (newvalue == "1" || newvalue == "true") ? "true" : "false"
         else
@@ -117,7 +116,7 @@ module Radiant
     #
     # is equivalent to this:
     #
-    #   key = Radiant::Configuration.find_or_create_by_key('key').value
+    #   key = Radiant::Configuration.find_or_create_by(key: 'key').value
     #
     # If the config item is boolean the response will be true or false. For items with :type => :integer it will be an integer,
     # for everything else a string.
