@@ -93,7 +93,8 @@ module Radiant
 
       private
         def visible_by_controller?(user, action)
-          controller = "#{url}_controller".camelize.constantize rescue nil
+          inferred = url.chomp('/edit')
+          controller = "#{inferred}_controller".camelize.constantize rescue nil
 
           controller.present? &&
           controller.user_has_access_to_action?(user, action)

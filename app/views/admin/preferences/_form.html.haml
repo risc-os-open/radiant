@@ -1,7 +1,7 @@
 = form_for @user, url: admin_preferences_path, html: { method: :put } do |f|
   = hidden_field "user", "lock_version"
 
-  = render :partial => 'avatar' unless @user.new_record?
+  = render :partial => '/admin/users/avatar' unless @user.new_record?
 
   = render_region :form_top
 
@@ -22,7 +22,7 @@
         = f.text_field "login", :class => "textbox", :size => 32, :maxlength => 40, :autocomplete => 'off'
 
     - form.edit_password do
-      = render "password_fields", :f => f
+      = render '/admin/users/password_fields', :f => f
 
     - form.edit_locale do
       %p
