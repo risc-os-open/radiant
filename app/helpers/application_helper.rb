@@ -57,12 +57,13 @@ module ApplicationHelper
 
   def current_url?(options)
     url = case options
-    when Hash
-      url_for options
-    else
-      options.to_s
+      when Hash
+        url_for options
+      else
+        options.to_s
     end
-    request.url =~ Regexp.new('^' + Regexp.quote(clean(url)))
+
+    request.path.match? Regexp.new('^' + Regexp.quote(clean(url)))
   end
 
   def clean(url)
@@ -97,10 +98,10 @@ module ApplicationHelper
       time = (model.updated_at || model.created_at)
       if name or time
         html = %{<p class="updated_line">#{t('timestamp.last_updated')} }
-        html << %{#{t('timestamp.by')} <strong>#{name}</strong> } if name
+        html << %{#{t('timestamp.by')} <strong>#{h(name)}</strong> } if name
         html << %{#{t('timestamp.at')} #{timestamp(time)}} if time
         html << %{</p>}
-        html
+        html.html_safe()
       end
     end
   end

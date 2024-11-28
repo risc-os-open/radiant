@@ -30,5 +30,8 @@ module Radiant
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # https://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-memorystore
+    config.cache_store = :memory_store, { size: 32*1024*1024 }
   end
 end

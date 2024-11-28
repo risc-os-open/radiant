@@ -5,7 +5,7 @@
     %label.inline{:for => "search_#{class_of_page.name.underscore}_tag_reference"} Filter Tags
     %input{:id => "search_#{class_of_page.name.underscore}_tag_reference", :type => "search", :name => "search_tag_reference"}/
     %span#tag_search_found_count.info
-  .reference= tag_reference
+  .reference= tag_reference()
   %p.close_link= link_to "Close Help", '#', onclick: "$(this).closePopup()"
   :javascript
     var tags, searchingOn = "";

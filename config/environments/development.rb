@@ -8,8 +8,10 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.enable_reloading = true
 
-  # Do not eager load code on boot.
-  config.eager_load = false
+  # A lot of the code here introspects on subclasses to do things like create a
+  # menu of available text filters. This fails if we haven't eager-loaded all
+  # possible such classes.
+  config.eager_load = true
 
   # Show full error reports.
   config.consider_all_requests_local = true

@@ -13,24 +13,6 @@ $owg-threshold: $graceful-usage-threshold !default;
 // unless otherwise instructed.
 $use-legacy-gradient-syntax: false !default;
 
-// Create a linear gradient using standard official or legacy syntax.
-// This function must be included in one of the following
-// image module mixins to work properly.
-@function linear-gradient($angle, $details...) {
-  $legacy-syntax: $use-legacy-gradient-syntax;
-
-  @if meta.type-of($angle) != 'number' {
-    $angle: compact($angle);
-    $legacy-syntax: if(list.index($angle, 'to'), false, true);
-  }
-
-  @if $legacy-syntax {
-    @return _linear-gradient_legacy($angle, $details...);
-  } @else {
-    @return _linear-gradient($angle, $details...);
-  }
-}
-
 // These browsers support svg but not gradients
 // so we can shim the gradient with an inline svg file.
 $browsers-supporting-svg-but-not-gradients: (ie: "9", opera: "9.5-9.6");

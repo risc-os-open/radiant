@@ -29,15 +29,27 @@ class User < ApplicationRecord
 
   attr_writer :confirm_password
 
-  def self.get_permitted_params_from(unsafe_params)
-    unsafe_params.require(:user).permit([
+  # The named 'privileged' parameter is 'true' if an admin is editing an
+  # arbitrary user, else 'false', where we assume a user is editing themselves
+  # only and certain fields (such as 'role') cannot be changed.
+
+  def self.get_permitted_params_from(unsafe_params, privileged:)
+    permitted = [
       :name,
       :email,
       :login,
       :password,
       :password_confirmation,
       :locale
-    ])
+    ]
+
+    if privileged == true
+      permitted << :admin
+      permitted << :designer
+      permitted << :notes
+    end
+
+    unsafe_params.require(:user).permit(permitted)
   end
 
   def has_role?(role)

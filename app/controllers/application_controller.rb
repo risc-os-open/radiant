@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   before_action :set_javascripts_and_stylesheets
   before_action :set_standard_body_style, :only => [:new, :edit, :update, :create]
 
-  attr_accessor :configuration, :cache
+  attr_accessor :configuration
   attr_reader :pagination_parameters
   helper_method :pagination_parameters
 

@@ -7,12 +7,17 @@ class Admin::UsersController < Admin::ResourceController
 
   before_action :ensure_deletable, :only => [:remove, :destroy]
 
+  def index
+    @template_name = 'index' # for Admin::RegionsHelper
+    @users = User.all.order(email: :asc)
+  end
+
   def show
     redirect_to edit_admin_user_path(params[:id])
   end
 
   def update
-    user_params = User.get_permitted_params_from(params)
+    user_params = User.get_permitted_params_from(params, privileged: true)
     if user_params && user_params['admin'] == false && model == current_user
       user_params.delete('admin')
       annouce_cannot_remove_self_from_admin_role

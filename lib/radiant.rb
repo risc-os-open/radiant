@@ -1,4 +1,4 @@
-RADIANT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), "..")) unless defined? RADIANT_ROOT
+RADIANT_ROOT = Rails.root unless defined? RADIANT_ROOT
 
 unless defined? Radiant::Version
   module Radiant

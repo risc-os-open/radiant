@@ -1,3 +1,5 @@
+module Filters; end
+
 class Filters::TextFilter
   include Simpleton
   include Annotatable

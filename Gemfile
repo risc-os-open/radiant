@@ -76,6 +76,11 @@ gem 'html-pipeline', '= 3.2.0'
 #
 gem 'rss', '~> 0.3'
 
+# "Native" vs English language names:
+# https://rubygems.org/gems/i18n-language-mapping
+#
+gem 'i18n-language-mapping', '~> 0.1'
+
 # Replace Rails <= 3.0 'auto_link' [https://rubygems.org/gems/rails_autolink]
 #
 gem 'rails_autolink', '~> 1.1'

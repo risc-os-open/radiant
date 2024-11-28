@@ -14,12 +14,13 @@ Rails.application.routes.draw do
   end
 
   get 'admin/pages/:id/remove', as: 'remove_admin_page', to: 'admin/pages#remove'
+  get 'admin/users/:id/remove', as: 'remove_admin_user', to: 'admin/users#remove'
 
   post 'admin/preview', to: 'admin/pages#preview'
   put  'admin/preview', to: 'admin/pages#preview'
 
   namespace :admin do
-    resource :preferences
+    resource :preferences, only: [ :edit, :update ]
     resource :configuration, controller: 'configuration'
 
     resources :extensions, only: :index

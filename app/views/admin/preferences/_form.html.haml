@@ -1,4 +1,4 @@
-= form_for [:admin, @user] do |f|
+= form_for @user, url: admin_preferences_path, html: { method: :put } do |f|
   = hidden_field "user", "lock_version"
 
   = render :partial => 'avatar' unless @user.new_record?
@@ -24,14 +24,6 @@
     - form.edit_password do
       = render "password_fields", :f => f
 
-    - form.edit_roles do
-      %p
-        %label.multi_option= t('roles')
-        = f.check_box "admin", :class => "checkbox"
-        = f.label :admin, t('admin'), :class => "checkbox"
-        = f.check_box "designer", :class => "checkbox"
-        = f.label :designer, t('designer'), :class => "checkbox"
-
     - form.edit_locale do
       %p
         = f.label :locale, t('language')
@@ -47,7 +39,3 @@
       .buttons
         = save_model_button(@user)
         = save_model_and_continue_editing_button(@user)
-        = t('or')
-        = link_to t('cancel'), admin_users_path
-    - form_bottom.edit_timestamp do
-      = updated_stamp @user

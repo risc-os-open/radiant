@@ -24,7 +24,7 @@ class Admin::ConfigurationController < ApplicationController
   def update
     if params[:config]
       begin
-        Radiant.configuration.transaction do
+        Radiant::Configuration.transaction do
           params["config"].each_pair do |key, value|
             @config[key] = Radiant::Configuration.find_or_create_by_key(key)
             @config[key].value = value      # validation sets errors on @config['key'] that the helper methods will pick up
