@@ -19,8 +19,14 @@ class String
   #
   #   "ThisAnd That and-this and_that" -> "This And That And This And That"
   #
-  def to_name(last_part = '')
-    self.underscore.gsub('/', ' ').humanize.titlecase.gsub(/\s*#{last_part}$/, '')
+  def to_name(remove_prefix: '', remove_suffix: '')
+    self
+      .sub(/^#{remove_prefix}/, '')
+      .sub(/#{remove_suffix}$/, '')
+      .underscore
+      .gsub('/', ' ')
+      .humanize
+      .titlecase
   end
 
   alias :to_slug   :parameterize

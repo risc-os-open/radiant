@@ -3,7 +3,7 @@
 require 'erb'
 
 class Filters::ErbFilter < ::Filters::TextFilter
-  description_file File.dirname(__FILE__) + "/../filter_descriptions/erb.html"
+  description_file File.dirname(__FILE__) + "/filter_descriptions/erb.html"
 
   # Radiant pages using the ERB behavior expect something close to
   # ActionView behavior, so include ERB::Util for things like url_encode().

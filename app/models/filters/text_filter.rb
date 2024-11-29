@@ -12,7 +12,7 @@ class Filters::TextFilter
 
   class << self
     def inherited(subclass)
-      subclass.filter_name = subclass.name.to_name('Filter')
+      subclass.filter_name = subclass.name.to_name(remove_prefix: 'Filters::', remove_suffix: 'Filter')
     end
 
     def filter(text)

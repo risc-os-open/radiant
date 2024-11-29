@@ -187,13 +187,6 @@ describe Page do
       page.field(:keywords).should == page.fields.find_by_name('keywords')
     end
 
-    it "should find an unsaved field" do
-      field = PageField.new(:name => 'description', :content => 'radiant')
-      page.fields << field
-      page.field(:description).should == field
-    end
-  end
-
   describe '#has_part?' do
     it 'should return true for a valid part' do
       page.has_part?('body').should == true

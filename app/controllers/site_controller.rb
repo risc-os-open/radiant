@@ -27,7 +27,7 @@ class SiteController < ApplicationController
       render template: 'site/not_found', status: 404
     end
   rescue Page::MissingRootPageError
-    redirect_to welcome_url
+    redirect_to admin_welcome_path
   end
 
   def cacheable_request?

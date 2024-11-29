@@ -20,11 +20,11 @@ module Admin::ReferencesHelper
   end
 
   def filter_reference
-    unless filter.blank?
-      if filter.description.blank?
+    unless filter().blank?
+      if filter().description.blank?
         "There is no documentation on this filter."
       else
-        filter.description
+        filter().description.html_safe()
       end
     else
       "There is no filter on the current page part."
@@ -33,16 +33,20 @@ module Admin::ReferencesHelper
 
   def _display_name
     case params[:type]
-    when 'filters'
-      filter ? filter.filter_name : t('select.none')
-    when 'tags'
-      class_of_page.display_name
+      when 'filters'
+        filter() ? filter().filter_name : t('select.none')
+      when 'tags'
+        class_of_page.display_name
     end
   end
 
   def filter
     @filter ||= begin
-      ::Filters::TextFilter.find_descendant(params[:filter_name])
+      if @page.present?
+        @page.parts.empty? ? nil : @page.parts.first.filter
+      else
+        ::Filters::TextFilter.find_descendant(params[:filter_name])
+      end
     end
   end
 

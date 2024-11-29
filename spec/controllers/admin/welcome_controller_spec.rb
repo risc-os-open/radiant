@@ -19,7 +19,7 @@ describe Admin::WelcomeController do
     post :login, :username_or_email => "admin", :password => "password"
     controller.send(:current_user).should == users(:admin)
     response.should be_redirect
-    response.should redirect_to(welcome_url)
+    response.should redirect_to(admin_welcome_path)
   end
 
   it "should render the login template when login failed" do
@@ -58,7 +58,7 @@ describe Admin::WelcomeController do
       controller.should_receive(:current_user=).with(nil)
       get :logout
       response.should be_redirect
-      response.should redirect_to(login_url)
+      response.should redirect_to(admin_login_path)
     end
 
     it "should forget user on logout" do
@@ -68,7 +68,7 @@ describe Admin::WelcomeController do
 
     it "should not show /login again" do
       get :login
-      response.should redirect_to(welcome_url)
+      response.should redirect_to(admin_welcome_path)
     end
 
     describe "and a stored location" do
@@ -91,7 +91,7 @@ describe Admin::WelcomeController do
     it "should gracefully handle logout" do
       controller.stub!(:current_member).and_return(nil)
       get :logout
-      response.should redirect_to(login_url)
+      response.should redirect_to(admin_login_path)
     end
   end
 

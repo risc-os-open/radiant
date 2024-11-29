@@ -121,14 +121,6 @@ module ApplicationHelper
     v ? {} : {:style => "display: none"}
   end
 
-  def meta_errors?
-    false
-  end
-
-  def meta_label
-    meta_errors? ? 'Less' : 'More'
-  end
-
   def toggle_javascript_for(id)
     "Element.toggle('#{id}'); Element.toggle('more-#{id}'); Element.toggle('less-#{id}'); return false;"
   end

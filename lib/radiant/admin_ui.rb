@@ -118,7 +118,7 @@ module Radiant
     end
 
     # Region sets
-    %w{page layout snippet configuration user preference extension}.each do |controller|
+    %w{page snippet layout configuration user preference extension}.each do |controller|
       attr_accessor controller
       alias_method "#{controller}s", controller
     end
@@ -154,6 +154,7 @@ module Radiant
     def load_default_regions
       @page = load_default_page_regions
       @layout = load_default_layout_regions
+      @snippet = load_default_snippet_regions
       @user = load_default_user_regions
       @preference = load_default_preference_regions
       @configuration = load_default_configuration_regions
@@ -181,11 +182,6 @@ module Radiant
 
     def load_default_user_regions
       OpenStruct.new.tap do |user|
-        user.preferences = RegionSet.new do |preferences|
-          preferences.main.concat %w{edit_header edit_form}
-          preferences.form.concat %w{edit_name edit_email edit_username edit_password edit_locale}
-          preferences.form_bottom.concat %w{edit_buttons}
-        end
         user.edit = RegionSet.new do |edit|
           edit.main.concat %w{edit_header edit_form}
           edit.form.concat %w{edit_name edit_email edit_username edit_password
@@ -208,6 +204,23 @@ module Radiant
           edit.form.concat %w{edit_name edit_email edit_username edit_password edit_locale}
           edit.form_bottom.concat %w{edit_buttons}
         end
+      end
+    end
+
+    def load_default_snippet_regions
+      OpenStruct.new.tap do |snippet|
+        snippet.edit = RegionSet.new do |edit|
+          edit.main.concat %w{edit_header edit_form}
+          edit.form.concat %w{edit_title edit_content edit_filter}
+          edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+        end
+        snippet.index = RegionSet.new do |index|
+          index.top.concat %w{}
+          index.thead.concat %w{title_header modify_header}
+          index.tbody.concat %w{title_cell modify_cell}
+          index.bottom.concat %w{new_button}
+        end
+        snippet.new = snippet.edit
       end
     end
 

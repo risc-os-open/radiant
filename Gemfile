@@ -45,9 +45,9 @@ gem "haml-rails", "~> 2.0"
 #
 gem 'hubssolib', '~> 2.0', require: 'hub_sso_lib'
 
-# Easy pagination [https://rubygems.org/gems/pagy]
+# Easy pagination [https://rubygems.org/gems/will_paginate]
 #
-gem 'pagy', '~> 9.0'
+gem 'will_paginate', '~> 4.0'
 
 # Tag-based templates (abandoneware, but runs on Ruby 2.6+, so Ruby 3.x should
 # also be fine) (https://github.com/jlong/radius)

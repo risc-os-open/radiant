@@ -15,13 +15,15 @@
         .set
           %p
             = f.label :filter_id, t('filter')
-            = f.select :filter_id, [[t('select.none'), '']] + TextFilter.descendants.map { |f| f.filter_name }.sort, :id => 'snippet_filter'
+            = f.select :filter_id, [[t('select.none'), '']] + ::Filters::TextFilter.descendants.map { |f| f.filter_name }.sort, :id => 'snippet_filter'
+
+
             %span.reference_links
               == #{t('reference')}:
               %span{:id => "filter_reference_link"}
-                = link_to_function t('filter'), "loadFilterReference();"
+                = link_to t('filter'), '#', onclick: "loadFilterReference();"
               %span{:id => "tag_reference_link"}
-                = link_to_function t('available_tags'), "loadTagReference('Page');"
+                = link_to t('available_tags'), '#', onclick: "loadTagReference('Page');"
 
   - render_region :form_bottom, :locals => {:f => f} do |form_bottom|
     - form_bottom.edit_buttons do

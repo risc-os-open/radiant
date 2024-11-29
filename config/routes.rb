@@ -3,23 +3,18 @@ Rails.application.routes.draw do
   # Admin RESTful routes
   #
   namespace :admin do
-    # :member => { :remove => :get }    ==> get :remove --?
-
     resources :pages do
+      get 'remove', on: :member
       resources :children, controller: "pages"
     end
 
-    resources :layouts
-    resources :users
-  end
+    post 'preview', to: 'pages#preview'
+    put  'preview', to: 'pages#preview'
 
-  get 'admin/pages/:id/remove', as: 'remove_admin_page', to: 'admin/pages#remove'
-  get 'admin/users/:id/remove', as: 'remove_admin_user', to: 'admin/users#remove'
+    resources(:layouts ) { get 'remove', on: :member }
+    resources(:snippets) { get 'remove', on: :member }
+    resources(:users   ) { get 'remove', on: :member }
 
-  post 'admin/preview', to: 'admin/pages#preview'
-  put  'admin/preview', to: 'admin/pages#preview'
-
-  namespace :admin do
     resource :preferences, only: [ :edit, :update ]
     resource :configuration, controller: 'configuration'
 
@@ -28,15 +23,13 @@ Rails.application.routes.draw do
     resources :page_fields
 
     get '/reference/:type', as: 'reference', to: 'references#show'
-  end
 
-  # Admin other routes
-  #
-  get  'admin',         as: 'admin',   to: 'admin/welcome#index'
-  get  'admin/welcome', as: 'welcome', to: 'admin/welcome#index'
-  get  'admin/login',   as: 'login',   to: 'admin/welcome#login'
-  post 'admin/login',                  to: 'admin/welcome#login'
-  get  'admin/logout',  as: 'logout',  to: 'admin/welcome#logout'
+    get  '/',        as: '',        to: 'welcome#index'
+    get  '/welcome', as: 'welcome', to: 'welcome#index'
+    get  '/login',   as: 'login',   to: 'welcome#login'
+    post '/login',                  to: 'welcome#login'
+    get  '/logout',  as: 'logout',  to: 'welcome#logout'
+  end
 
   # Site URLs
   #

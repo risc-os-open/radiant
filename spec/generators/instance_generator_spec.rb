@@ -67,7 +67,7 @@ shared_examples_for "all instance generators" do
   end
 
   # Check for admin javascripts
-  %w(application.js controls.js dragdrop.js lowpro.js popup.js pagefield.js ruledtable.js sitemap.js
+  %w(application.js controls.js dragdrop.js lowpro.js popup.js ruledtable.js sitemap.js
     tabcontrol.js codearea.js cookie.js effects.js prototype.js shortcuts.js status.js utility.js).each do |file|
     it "should have a #{file} admin image" do
       'public/javascripts/admin'.should have_generated_file(file)

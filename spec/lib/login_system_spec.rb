@@ -74,7 +74,7 @@ describe 'Login System:', :type => :controller do
     it "should not authenticate without user in session" do
       logout
       get :index
-      response.should redirect_to(login_url)
+      response.should redirect_to(admin_login_path)
     end
 
     it "should store location" do

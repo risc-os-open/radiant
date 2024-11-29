@@ -4,6 +4,9 @@ dbinfo: &dbinfo
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  migrations_paths:
+    - "db/migrate"
+    - "db/migrate_after_transfer"
 
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
@@ -20,3 +23,7 @@ test:
 production:
   <<: *dbinfo
   database: radiant
+  migrations_paths:
+    - "db/migrate"
+    # UNCOMMENT AFTER DATA LOAD IS COMPLETED
+    # - "db/migrate_after_transfer"

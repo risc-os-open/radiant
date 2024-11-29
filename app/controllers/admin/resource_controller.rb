@@ -130,8 +130,8 @@ class Admin::ResourceController < ApplicationController
   def pagination_parameters
     pp = params[:pp] || 20
     {
-      :page  => (params[:p] || 1).to_i,
-      :limit => pp.to_i
+      :page     => (params[:p] || 1).to_i,
+      :per_page => pp.to_i
     }
   end
 
@@ -172,13 +172,14 @@ class Admin::ResourceController < ApplicationController
     def models
       instance_variable_get("@#{plural_model_symbol}") || load_models
     end
+
     alias :current_objects :models
+
     def models=(objects)
       instance_variable_set("@#{plural_model_symbol}", objects)
     end
-    def load_models
-return model_class.all
 
+    def load_models
       self.models = paginated? ? model_class.paginate(pagination_parameters) : model_class.all
     end
 

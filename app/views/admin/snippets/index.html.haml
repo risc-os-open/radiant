@@ -20,8 +20,8 @@
                   = image('snippet', :alt => '')
                   %span= link_to snippet.name, edit_admin_snippet_url(snippet)
               - tbody.modify_cell do
-                %td.remove
-                  = link_to t('remove'), remove_admin_snippet_url(snippet)
+                %td.actions
+                  = link_to image('minus') + ' ' + t('remove'), remove_admin_snippet_url(snippet), :class => "action"
       - else
         %tr
           %td.empty{:colspan => admin.snippet.index.tbody.length}= t('no_snippets')

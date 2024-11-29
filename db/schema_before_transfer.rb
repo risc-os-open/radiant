@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2010_08_10_151922) do
+ActiveRecord::Schema[7.2].define(version: 2009_10_03_095744) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,13 +37,6 @@ ActiveRecord::Schema[7.2].define(version: 2010_08_10_151922) do
     t.integer "lock_version", default: 0
   end
 
-  create_table "page_fields", force: :cascade do |t|
-    t.integer "page_id"
-    t.string "name"
-    t.string "content"
-    t.index ["page_id", "name", "content"], name: "index_page_fields_on_page_id_and_name_and_content"
-  end
-
   create_table "page_parts", id: :serial, force: :cascade do |t|
     t.text "name"
     t.string "filter_id", limit: 25
@@ -67,6 +60,8 @@ ActiveRecord::Schema[7.2].define(version: 2010_08_10_151922) do
     t.integer "updated_by_id"
     t.boolean "virtual", default: false, null: false
     t.integer "lock_version", default: 0
+    t.string "description", limit: 255
+    t.string "keywords", limit: 255
     t.index ["class_name"], name: "pages_class_name"
     t.index ["parent_id"], name: "pages_parent_id"
     t.index ["slug", "parent_id"], name: "pages_child_slug"

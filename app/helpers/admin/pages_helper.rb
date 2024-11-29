@@ -6,12 +6,14 @@ module Admin::PagesHelper
     @page.nil? ? super : @page.class
   end
 
-  def filter
-    @page.parts.empty? ? nil : @page.parts.first.filter
-  end
+  # for 'def filter' special case with @page set, see ReferencesHelper.
 
   def meta_errors?
-    !!(@page.errors[:slug] or @page.errors[:breadcrumb])
+    @page.errors.include?(:slug) || @page.errors.include?(:breadcrumb)
+  end
+
+  def meta_label
+    meta_errors? ? 'Less' : 'More'
   end
 
   def default_filter_name

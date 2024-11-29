@@ -30,7 +30,7 @@ describe SiteController do
   it "should redirect to admin if missing root" do
     Page.should_receive(:find_by_path).and_raise(Page::MissingRootPageError)
     get :show_page, :url => '/'
-    response.should redirect_to(welcome_url)
+    response.should redirect_to(admin_welcome_path)
   end
 
   it "should pass pagination parameters to the page" do

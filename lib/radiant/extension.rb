@@ -10,46 +10,46 @@ module Radiant
     annotate :version, :description, :url, :extension_name, :path
 
     attr_writer :active
-    
+
     def active?
       @active
     end
-    
+
     def root
       path.to_s
     end
-    
+
     def migrated?
       migrator.new(:up, migrations_path).pending_migrations.empty?
     end
-    
+
     def enabled?
       active? and migrated?
     end
-    
+
     # Conventional plugin-like routing
     def routed?
       File.exist?(routing_file)
     end
-    
+
     def migrations_path
       File.join(self.root, 'db', 'migrate')
     end
-    
+
     def migrates_from
       @migrates_from ||= {}
     end
-    
+
     def routing_file
       File.join(self.root, 'config', 'routes.rb')
     end
-        
+
     def load_initializers
       Dir["#{self.root}/config/initializers/**/*.rb"].sort.each do |initializer|
         load(initializer)
       end
     end
-    
+
     def migrator
       unless @migrator
         extension = self
@@ -57,11 +57,11 @@ module Radiant
       end
       @migrator
     end
-    
+
     def admin
       AdminUi.instance
     end
-    
+
     def tab(name, options={}, &block)
       @the_tab = admin.nav[name]
       unless @the_tab
@@ -84,7 +84,7 @@ module Radiant
       return @the_tab
     end
     alias :add_tab :tab
-    
+
     def add_item(*args)
       @the_tab.add_item(*args)
     end
@@ -122,7 +122,7 @@ module Radiant
       alias :deactivate :deactivate_extension
 
       def inherited(subclass)
-        subclass.extension_name = subclass.name.to_name('Extension')
+        subclass.extension_name = subclass.name.to_name(remove_suffix: 'Extension')
       end
 
       def migrate_from(extension_name, until_migration=nil)
@@ -140,7 +140,7 @@ module Radiant
       def extension_config(&block)
         yield Rails.configuration
       end
-      
+
     end
   end
 end
