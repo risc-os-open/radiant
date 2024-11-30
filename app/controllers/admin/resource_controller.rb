@@ -61,17 +61,11 @@ class Admin::ResourceController < ApplicationController
   #     response_for :create
   #   end
   #
-  # ...noting that this is *spectacularly* unwise and unsafe, but for now, this
-  # is no *worse* than we had and I hope to come back and sort this out at some
-  # future time. A deep code analysis would let me know all possible values of
-  # ::model_class (see below) and a by-convention class method call could yield
-  # permitted parameters for each model (for example).
-  #
   [:create, :update].each do |action|
     class_eval %{
       def #{action}
-        unsafe_attrs = params[model_symbol].to_unsafe_hash()
-        model.update!(unsafe_attrs)
+        safe_attrs = model.class.get_permitted_params_from(params)
+        model.update!(safe_attrs)
         response_for :#{action}
       end
     }, __FILE__, __LINE__
@@ -84,11 +78,10 @@ class Admin::ResourceController < ApplicationController
 
   # 2024 Rails 7 notes:
   #
-  # See comments on 'create, update' dynamic method generator above. This is
-  # extremely unwise. although it's possible that the range of controller names
-  # in any way possible here via routing do mean that it would be impossible to
-  # hack a route that inadvertently reveals the presence of a model-or-other
-  # class which wasn't supposed to be used.
+  # This base class is only used by internal code from known controllers, so
+  # the value of 'controller_name' cannot be forced by malicious web site
+  # visitors, so the range of possible things that might be coerced into a
+  # constant for 'model_class' is *not* something an attacker can influence.
   #
   def self.model_class(model_class = nil)
     @model_class ||= (model_class || self.controller_name).to_s.singularize.camelize.constantize
