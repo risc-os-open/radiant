@@ -64,7 +64,7 @@ class Admin::ResourceController < ApplicationController
   [:create, :update].each do |action|
     class_eval %{
       def #{action}
-        safe_attrs = model.class.get_permitted_params_from(params)
+        safe_attrs = params.require(model_symbol).permit(model_class.permitted_params())
         model.update!(safe_attrs)
         response_for :#{action}
       end

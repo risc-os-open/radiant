@@ -2,6 +2,8 @@
 # and originally came from Ultrasphinx
 # it saves us a lot of including and bodging to make will_paginate's template calls work in the Page model
 
+require 'will_paginate/view_helpers/link_renderer'
+
 module Radiant
   module Pagination
     class LinkRenderer < WillPaginate::ViewHelpers::LinkRenderer

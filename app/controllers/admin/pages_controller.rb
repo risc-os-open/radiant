@@ -33,7 +33,7 @@ class Admin::PagesController < Admin::ResourceController
       page_class = Page.descendants.include?(model_class) ? model_class : Page
       if request.referer =~ %r{/admin/pages/(\d+)/edit}
         page = Page.find($1).becomes(page_class)
-        page.update!(Page.get_permitted_params_from(params))
+        page.update!(params.require(:page).permit(Page.permitted_params()))
         page.published_at ||= Time.now
       else
         page = page_class.new(params[:page])

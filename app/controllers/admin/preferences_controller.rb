@@ -16,7 +16,11 @@ class Admin::PreferencesController < ApplicationController
   end
 
   def update
-    success = @user.update(User.get_permitted_params_from(params, privileged: false))
+    success = @user.update(
+      params
+        .require(:user)
+        .permit(User.permitted_unprivileged_params())
+    )
 
     if success
       redirect_to admin_configuration_path()

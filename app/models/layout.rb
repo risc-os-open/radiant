@@ -13,4 +13,13 @@ class Layout < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_length_of :name, maximum: 100
+
+  def self.permitted_params
+    [
+      :lock_version,
+      :name,
+      :content_type,
+      :content,
+    ]
+  end
 end

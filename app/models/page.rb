@@ -7,6 +7,8 @@ class Page < ApplicationRecord
 
   include UserActionObserverConcern
 
+  self.inheritance_column = 'class_name'
+
   # Callbacks
   before_save :update_virtual, :update_status, :set_allowed_children_cache
 
@@ -35,6 +37,22 @@ class Page < ApplicationRecord
 
   validate :valid_class_name
 
+  def self.permitted_params
+    [
+      :lock_version,
+      :parent_id,
+      :title,
+      :slug,
+      :breadcrumb,
+      :layout_id,
+      :class_name,
+      :status_id,
+      :published_at,
+      parts_attributes:  [:id] +  PagePart.permitted_params(),
+      fields_attributes: [:id] + PageField.permitted_params(),
+    ]
+  end
+
   # Load all tags
   #
   include Radiant::Taggable
@@ -62,31 +80,6 @@ class Page < ApplicationRecord
   attr_accessor :session, :cookies, :request, :response, :pagination_parameters
   class_attribute :default_child
   self.default_child = self
-
-  self.inheritance_column = 'class_name'
-
-  def self.get_permitted_params_from(unsafe_params)
-    unsafe_params.require(:page).permit([
-      :lock_version,
-      :parent_id,
-      :title,
-      :slub,
-      :breadcrumb,
-      :layout_id,
-      :class_name,
-      :status_id,
-      :published_at,
-      parts_attributes: [
-        :name,
-        :filter_id,
-        :content
-      ],
-      fields_attributes: [
-        :name,
-        :content
-      ],
-    ])
-  end
 
   # def layout_with_inheritance
   #   unless layout_without_inheritance

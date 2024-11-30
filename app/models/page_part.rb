@@ -15,4 +15,12 @@ class PagePart < ApplicationRecord
   def after_initialize
     self.filter_id ||= Radiant::Configuration['defaults.page.filter'] if new_record?
   end
+
+  def self.permitted_params
+    [
+      :name,
+      :filter_id,
+      :content,
+    ]
+  end
 end

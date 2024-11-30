@@ -12,7 +12,7 @@ class Admin::UsersController < Admin::ResourceController
   end
 
   def update
-    user_params = User.get_permitted_params_from(params, privileged: true)
+    user_params = params.require(:user).permit(User.permitted_params())
     if user_params && user_params['admin'] == false && model == current_user
       user_params.delete('admin')
       annouce_cannot_remove_self_from_admin_role

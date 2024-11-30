@@ -29,12 +29,11 @@ class User < ApplicationRecord
 
   attr_writer :confirm_password
 
-  # The named 'privileged' parameter is 'true' if an admin is editing an
-  # arbitrary user, else 'false', where we assume a user is editing themselves
-  # only and certain fields (such as 'role') cannot be changed.
-
-  def self.get_permitted_params_from(unsafe_params, privileged:)
-    permitted = [
+  # This is used by PreferencesController externally, since it does not lean on
+  # Admin::ResourcesController to do its work. See also ::permitted_params.
+  #
+  def self.permitted_unprivileged_params
+    [
       :name,
       :email,
       :login,
@@ -42,14 +41,19 @@ class User < ApplicationRecord
       :password_confirmation,
       :locale
     ]
+  end
 
-    if privileged == true
-      permitted << :admin
-      permitted << :designer
-      permitted << :notes
-    end
-
-    unsafe_params.require(:user).permit(permitted)
+  # This is used by Admin::UsersController (via Admin::ResourcesController) and
+  # that controller is admin-access only. It allows a wider range of parameters
+  # to be altered. A regular user should not, for example, be allowed to set
+  # themselves as an admin! See also ::permitted_unprivileged_params.
+  #
+  def self.permitted_params
+    self.permitted_unprivileged_params() + [
+      :admin,
+      :designer,
+      :notes
+    ]
   end
 
   def has_role?(role)

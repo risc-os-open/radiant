@@ -14,4 +14,13 @@ class Snippet < ApplicationRecord
   validates_length_of :filter_id, maximum: 25, allow_nil: true
   validates_format_of :name, with: %r{\A\S*\z}
   validates_uniqueness_of :name
+
+  def self.permitted_params
+    [
+      :lock_version,
+      :name,
+      :content,
+      :filter_id,
+    ]
+  end
 end
