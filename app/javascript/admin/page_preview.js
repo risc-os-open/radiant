@@ -19,7 +19,6 @@ document.observe('dom:loaded', function() {
     }
   });
 
-
   $('show-preview').observe('click', function(e) {
     e.stop();
 

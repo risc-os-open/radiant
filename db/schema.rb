@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2010_08_10_151922) do
+ActiveRecord::Schema[7.2].define(version: 2011_09_02_203823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,6 +67,7 @@ ActiveRecord::Schema[7.2].define(version: 2010_08_10_151922) do
     t.integer "updated_by_id"
     t.boolean "virtual", default: false, null: false
     t.integer "lock_version", default: 0
+    t.text "allowed_children_cache"
     t.index ["class_name"], name: "pages_class_name"
     t.index ["parent_id"], name: "pages_parent_id"
     t.index ["slug", "parent_id"], name: "pages_child_slug"

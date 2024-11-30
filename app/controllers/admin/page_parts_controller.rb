@@ -1,6 +1,6 @@
 class Admin::PagePartsController < Admin::ResourceController
   def create
-    self.model.attributes = params[model_symbol]
+    self.model.attributes = params[model_symbol].permit(:name)
     @controller_name = 'page'
     @template_name = 'edit'
     render :partial => "page_part", :object => model,

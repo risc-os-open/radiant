@@ -122,7 +122,7 @@ module ApplicationHelper
   end
 
   def toggle_javascript_for(id)
-    "Element.toggle('#{id}'); Element.toggle('more-#{id}'); Element.toggle('less-#{id}'); return false;"
+    "Element.toggle('#{id}'); Element.toggle('more-#{id}'); Element.toggle('less-#{id}'); return false;".html_safe()
   end
 
   def image(name, options = {})

@@ -76,10 +76,15 @@ class Page < ApplicationRecord
       :class_name,
       :status_id,
       :published_at,
-      page_part: [
+      parts_attributes: [
         :name,
-        :index
-      ]
+        :filter_id,
+        :content
+      ],
+      fields_attributes: [
+        :name,
+        :content
+      ],
     ])
   end
 
@@ -168,31 +173,13 @@ class Page < ApplicationRecord
     self.request  = request   #  "
     self.response = response  #  "
 
-    # set_response_headers(@response)
-
     return { body: render().html_safe(), status: response_code() }
   end
 
   def headers
     # Return a blank hash that child classes can override or merge
-    { }
+    {}
   end
-
-  # def set_response_headers(response)
-  #   set_content_type(response)
-  #   headers.each { |k,v| response.headers[k] = v }
-  # end
-  # private :set_response_headers
-
-  # def set_content_type(response)
-  #   if layout
-  #     content_type = layout.content_type.to_s.strip
-  #     if content_type.present?
-  #       response.headers['Content-Type'] = content_type
-  #     end
-  #   end
-  # end
-  # private :set_content_type
 
   def response_code
     200

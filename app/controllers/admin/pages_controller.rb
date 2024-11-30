@@ -29,9 +29,25 @@ class Admin::PagesController < Admin::ResourceController
   end
 
   def preview
-    render_preview
-  rescue PreviewStop => exception
-    render :text => exception.message unless @performed_render
+    Page.transaction do
+      page_class = Page.descendants.include?(model_class) ? model_class : Page
+      if request.referer =~ %r{/admin/pages/(\d+)/edit}
+        page = Page.find($1).becomes(page_class)
+        page.update!(Page.get_permitted_params_from(params))
+        page.published_at ||= Time.now
+      else
+        page = page_class.new(params[:page])
+        page.published_at = page.updated_at = page.created_at = Time.now
+        page.parent = Page.find($1) if request.referer =~ %r{/admin/pages/(\d+)/children/new}
+      end
+
+      page.pagination_parameters = pagination_parameters()
+
+      result = page.process(self.session(), self.cookies(), self.request(), self.response())
+      render(html: result[:body], status: result[:status])
+
+      raise ActiveRecord::Rollback
+    end
   end
 
   private
@@ -50,31 +66,6 @@ class Admin::PagesController < Admin::ResourceController
       else
         Page
       end
-    end
-
-    def render_preview
-      Page.transaction do
-        page_class = Page.descendants.include?(model_class) ? model_class : Page
-        if request.referer =~ %r{/admin/pages/(\d+)/edit}
-          page = Page.find($1).becomes(page_class)
-          page.update!(Page.get_permitted_params_from(params))
-          page.published_at ||= Time.now
-        else
-          page = page_class.new(params[:page])
-          page.published_at = page.updated_at = page.created_at = Time.now
-          page.parent = Page.find($1) if request.referer =~ %r{/admin/pages/(\d+)/children/new}
-        end
-        page.pagination_parameters = pagination_parameters
-        process_with_exception(page)
-      end
-    end
-
-    def process_with_exception(page)
-      result = page.process(self.session(), self.cookies(), self.request(), self.response())
-      render(html: result[:body], status: result[:status])
-
-      @performed_render = true
-      raise PreviewStop
     end
 
     def count_deleted_pages
