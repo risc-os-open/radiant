@@ -14,26 +14,26 @@ ActiveRecord::Schema[7.2].define(version: 2011_09_02_203823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "config", id: :serial, force: :cascade do |t|
+  create_table "config", force: :cascade do |t|
     t.string "key", limit: 40, default: "", null: false
-    t.text "value", default: ""
+    t.string "value", default: ""
     t.index ["key"], name: "key", unique: true
   end
 
-  create_table "extension_meta", id: :serial, force: :cascade do |t|
-    t.text "name"
+  create_table "extension_meta", force: :cascade do |t|
+    t.string "name"
     t.integer "schema_version", default: 0
     t.boolean "enabled", default: true
   end
 
-  create_table "layouts", id: :serial, force: :cascade do |t|
+  create_table "layouts", force: :cascade do |t|
     t.string "name", limit: 100
     t.text "content"
-    t.string "content_type", limit: 40
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer "created_by_id"
     t.integer "updated_by_id"
+    t.string "content_type", limit: 40
     t.integer "lock_version", default: 0
   end
 
@@ -44,25 +44,25 @@ ActiveRecord::Schema[7.2].define(version: 2011_09_02_203823) do
     t.index ["page_id", "name", "content"], name: "index_page_fields_on_page_id_and_name_and_content"
   end
 
-  create_table "page_parts", id: :serial, force: :cascade do |t|
-    t.text "name"
+  create_table "page_parts", force: :cascade do |t|
+    t.string "name", limit: 100
     t.string "filter_id", limit: 25
     t.text "content"
     t.integer "page_id"
     t.index ["page_id", "name"], name: "parts_by_page"
   end
 
-  create_table "pages", id: :serial, force: :cascade do |t|
-    t.string "title", limit: 255
+  create_table "pages", force: :cascade do |t|
+    t.string "title"
     t.string "slug", limit: 100
     t.string "breadcrumb", limit: 160
-    t.integer "parent_id"
-    t.integer "layout_id"
     t.string "class_name", limit: 25
     t.integer "status_id", default: 1, null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.datetime "published_at", precision: nil
+    t.integer "parent_id"
+    t.integer "layout_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "published_at"
     t.integer "created_by_id"
     t.integer "updated_by_id"
     t.boolean "virtual", default: false, null: false
@@ -74,44 +74,42 @@ ActiveRecord::Schema[7.2].define(version: 2011_09_02_203823) do
     t.index ["virtual", "status_id"], name: "pages_published"
   end
 
-  create_table "sessions", id: :serial, force: :cascade do |t|
-    t.string "session_id", limit: 255
+  create_table "sessions", force: :cascade do |t|
+    t.string "session_id"
     t.text "data"
-    t.datetime "updated_at", precision: nil
+    t.datetime "updated_at"
     t.index ["session_id"], name: "index_sessions_on_session_id"
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "snippets", id: :serial, force: :cascade do |t|
+  create_table "snippets", force: :cascade do |t|
     t.string "name", limit: 100, default: "", null: false
     t.string "filter_id", limit: 25
     t.text "content"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer "created_by_id"
     t.integer "updated_by_id"
-    t.string "auto_export", limit: 512
-    t.string "change_exec", limit: 512
     t.integer "lock_version", default: 0
     t.index ["name"], name: "name", unique: true
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name", limit: 100
-    t.string "email", limit: 255
+    t.string "email"
     t.string "login", limit: 40, default: "", null: false
     t.string "password", limit: 40
     t.boolean "admin", default: false, null: false
     t.boolean "designer", default: false, null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer "created_by_id"
     t.integer "updated_by_id"
     t.text "notes"
     t.integer "lock_version", default: 0
-    t.string "salt", limit: 255
-    t.string "session_token", limit: 255
-    t.string "locale", limit: 255
+    t.string "salt"
+    t.string "session_token"
+    t.string "locale"
     t.index ["login"], name: "login", unique: true
   end
 end

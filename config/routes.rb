@@ -18,7 +18,6 @@ Rails.application.routes.draw do
     resource :preferences, only: [ :edit, :update ]
     resource :configuration, controller: 'configuration'
 
-    resources :extensions, only: :index
     resources :page_parts
     resources :page_fields
 

@@ -1,4 +1,4 @@
-class RenameBehaviorColumn < ActiveRecord::Migration
+class RenameBehaviorColumn < ActiveRecord::Migration[7.1]
   def self.up
     rename_column :pages, :behavior, :behavior_id
   end

@@ -1,5 +1,5 @@
-# See "erb_filter_extension.rb" for details.
-
+# See "erb_filter.rb" for details.
+#
 module Tags::ErbTags
   include Radiant::Taggable
 

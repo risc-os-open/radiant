@@ -1,5 +1,17 @@
-# See "dir_list_tags_extension.rb" for details.
-
+# Directory listing tags
+# ======================
+#
+# Define tags that provide various kinds of directory listing.
+#
+#
+# History
+# -------
+#
+# 2011-03-06 (ADH): Imported into Radiant 0.9.1 as an Extension.
+# 2013-10-24 (ADH): All listing entry anchors now named so that external
+#                   pages can refer directly to a table row.
+# 2024-12-01 (ADH): Moved into Rails 7 rebuild core.
+#
 module Tags::DirListTags
   include Radiant::Taggable
 
@@ -40,7 +52,6 @@ Certain magic directories are ignored (CVS, .svn).
     end
 
     docroot = ENV['SERVER_DOCUMENT_ROOT']
-    # See description text in "dir_list_tags_extension.rb" for details.
     raise TagError.new("You must make environment variable SERVER_DOCUMENT_ROOT available to Radiant") if (docroot.nil?)
 
     "<notextile>" + recursive_directory_list_in_li_tags(docroot, dir) + "</notextile>"
@@ -63,7 +74,7 @@ Filenames of entries in the drop box are converted by looking for everything up 
 
 Each entry in the tables of items can have a 'Details' column. These contain links, formed by appending the leafname as described above to whatever value is provided in the Radiant tag's "link_base" attribute. If the attribute is omitted, the column is omitted too. If included, the links contain the text "Details". To use an icon instead, provide a path to the icon in the "link_icon" attribute.
 
-Rails helper methods are used to create human-readable versions of default strings from the path components. For examples, please see <a href="http://rails.rubyonrails.org/classes/ActiveSupport/CoreExtensions/String/Inflections.html" target="_blank">this part of the Rails API</a>.
+Rails helper methods are used to create human-readable versions of default strings from the path components. For examples, please see <a href="https://api.rubyonrails.org/classes/ActiveSupport/Inflector.html" target="_blank">this part of the Rails API</a>.
 
 The configuration file is optional and allows the writer to both override strings generated with the above method, as well as specify things which cannot be determined purely from the drop box filenames. Syntax are as follows:
 
@@ -126,7 +137,6 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
     link_icon = tag.attr['link_icon']
 
     docroot = ENV['SERVER_DOCUMENT_ROOT']
-    # See description text in "dir_list_tags_extension.rb" for details.
     raise "You must make environment variable SERVER_DOCUMENT_ROOT available to Radiant" if (docroot.nil?)
 
     "<notextile>" + parsed_directory_list_in_table(docroot, dir, link_base, link_icon) + "</notextile>"
@@ -140,10 +150,11 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
   require 'find'
   #
   def recursive_directory_list(base, dir, recurse = true)
+
     # Partly based on:
     #
     #   http://www.oreillynet.com/onjava/blog/2006/03/recursive_directory_list_with.html
-
+    #
     excludes = [ 'CVS', '.svn' ]
     collect  = [];
     dir      = File.join( base, dir )

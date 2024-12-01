@@ -9,10 +9,13 @@ class User < ApplicationRecord
   default_scope { order(name: :asc) }
 
   # Associations
-  belongs_to :created_by, :class_name => 'User'
-  belongs_to :updated_by, :class_name => 'User'
+  belongs_to :created_by, :class_name => 'User', optional: true
+  belongs_to :updated_by, :class_name => 'User', optional: true
 
   # Validations
+  validates_presence_of :created_by, if: -> () { User.count > 0 }
+  validates_presence_of :updated_by, if: -> () { User.count > 0 }
+
   validates_uniqueness_of :login
 
   validates_confirmation_of :password, :if => :confirm_password?

@@ -1,10 +1,10 @@
-class CreateRadiantTables < ActiveRecord::Migration
+class CreateRadiantTables < ActiveRecord::Migration[7.1]
   def self.up
     create_table "config", :force => true do |t|
       t.column "key", :string, :limit => 40, :default => "", :null => false
       t.column "value", :string, :default => ""
     end
-    add_index "config", ["key"], :name => "key", :unique => true 
+    add_index "config", ["key"], :name => "key", :unique => true
 
     create_table "pages", :force => true do |t|
       t.column "title", :string
@@ -47,21 +47,21 @@ class CreateRadiantTables < ActiveRecord::Migration
       t.column "created_by", :integer
       t.column "updated_by", :integer
     end
-    
+
     create_table "users", :force => true do |t|
       t.column "name", :string, :limit => 100
       t.column "email", :string
       t.column "login", :string, :limit => 40, :default => "", :null => false
       t.column "password", :string, :limit => 40
-      t.column "admin", :integer, :limit => 1, :default => 0, :null => false
-      t.column "developer", :integer, :limit => 1, :default => 0, :null => false
+      t.column "admin", :boolean, :default => false, :null => false
+      t.column "developer", :boolean, :default => false, :null => false
       t.column "created_at", :datetime
       t.column "updated_at", :datetime
       t.column "created_by", :integer
       t.column "updated_by", :integer
     end
     add_index "users", ["login"], :name => "login", :unique => true
-  
+
   end
 
   def self.down

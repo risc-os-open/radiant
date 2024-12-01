@@ -1,4 +1,4 @@
-class MergeBehaviorsAndPages < ActiveRecord::Migration
+class MergeBehaviorsAndPages < ActiveRecord::Migration[7.1]
   class OldPage < ApplicationRecord
     self.table_name = 'pages'
   end

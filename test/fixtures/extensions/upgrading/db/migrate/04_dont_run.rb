@@ -1,4 +1,4 @@
-class DontRun < ActiveRecord::Migration
+class DontRun < ActiveRecord::Migration[7.1]
   def self.up
   end
   

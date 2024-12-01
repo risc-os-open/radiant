@@ -1,4 +1,4 @@
-class Second < ActiveRecord::Migration
+class Second < ActiveRecord::Migration[7.1]
   def self.up
   end
   

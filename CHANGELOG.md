@@ -1,13 +1,14 @@
 # Change Log
 
-## 2.0.0 (September 2024)
+## 2.0.0 (Decemmber 2024)
 
 * Rebuild for Rails 7 from 'rails new' and hand-importing file by file [Andrew Hodgkinson]
   - Radiant v1.1.4 was the highest available version at the time, from **roughly 2012**.
   - This is based on **older code** to avoid additional migrations causing cutover issues - **0.9.1, June 27, 2010**.
+  - There are however some concessions and inclusions, for example, page fields.
+  - Outdated or irrelevant (e.g. MySQL-specific) migration data is cut out ('text' means 'text', not 'varchar 255' these days)
   - Note that `LICENSE.md` is retained from v1.1.4 and unchanged.
-  - Last migration used is `20091003095744_change_user_language_to_locale`; subsequent migrations added up to v1.1.4 are omitted.
-  - Bare minimum feature focus for ROOL / Epsilon rebuild only.
+  - Bare minimum feature focus for ROOL / Epsilon rebuild only. **All extension code and support removed entirely in favour of simply moving things into the core** - the code was extremely complex, tried to allow for extensions of just about anything, hooked very deeply into things in Rails that have changed radically and I just did not see the value in trying to maintain the concept for ROOL's use case.
 
 ## 1.1.4
 

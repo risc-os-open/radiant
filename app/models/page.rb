@@ -293,23 +293,6 @@ class Page < ApplicationRecord
       display_name(string)
     end
 
-    def load_subclasses
-      ([RADIANT_ROOT] + Radiant::Extension.descendants.map(&:root)).each do |path|
-        Dir["#{path}/app/models/*_page.rb"].each do |page|
-          $1.camelize.constantize if page =~ %r{/([^/]+)\.rb}
-        end
-      end
-      if ActiveRecord::Base.connection.tables.include?('pages') && Page.column_names.include?('class_name') # Assume that we have bootstrapped
-        Page.where.not(class_name: ['', nil]).pluck(:class_name).each do
-          begin
-            p.constantize
-          rescue NameError, LoadError
-            eval(%Q{class #{p} < Page; acts_as_tree; def self.missing?; true end end}, TOPLEVEL_BINDING)
-          end
-        end
-      end
-    end
-
     def new_with_defaults(config = Radiant::Configuration)
       page = new
       page.parts.concat default_page_parts(config)

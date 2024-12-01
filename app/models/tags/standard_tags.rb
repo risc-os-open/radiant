@@ -1,7 +1,5 @@
 # Define standard Radiant tags.
 #
-# Extension tags are loaded via 'config/application.rb'.
-#
 module Tags::StandardTags
 
   include Radiant::Taggable
@@ -766,7 +764,7 @@ module Tags::StandardTags
     name = (tag.attr['name'] || page.created_by.name)
     rating = (tag.attr['rating'] || 'G')
     size = (tag.attr['size'] || '32px')
-    user = User.find_by_name(name)
+    user = User.find_by(name: name)
     email = user ? user.email : nil
     local_avatar_url = image_path("admin/avatar_#{([size.to_i] * 2).join('x')}.png")
     default_avatar_url = "#{request.protocol}#{request.host_with_port}#{local_avatar_url}"

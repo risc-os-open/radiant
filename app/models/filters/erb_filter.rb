@@ -1,5 +1,25 @@
-# See "erb_filter_extension.rb" for details.
-
+# Radiant ERB (Embedded Ruby) filter
+# ==================================
+#
+# Provides ERB support for Radiant content. For more about Radiant see
+# "http://radiantcms.org/".
+#
+#
+# History
+# -------
+#
+# 2006-07-14 (ADH): Created.
+# 2006-07-15 (ADH): Added 'description' field, currently commented out
+#                   until wider support in Filters is present.
+# 2006-07-25 (ADH): Extended models/behavior.rb to call an extended
+#                   filter interface including a hash of instance
+#                   variables. Implemented that interface here, using
+#                   the ActionView-derived magic first implemented in
+#                   the ERB Behavior code to define the hash variables
+#                   in the context of the ERB interpreter.
+# 2011-03-08 (ADH): Imported into Radiant 0.9.1 as an Extension.
+# 2024-12-01 (ADH): Moved into Rails 7 rebuild core.
+#
 require 'erb'
 
 class Filters::ErbFilter < ::Filters::TextFilter

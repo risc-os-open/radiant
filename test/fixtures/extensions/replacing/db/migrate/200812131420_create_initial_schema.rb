@@ -1,4 +1,4 @@
-class CreateInitialSchema < ActiveRecord::Migration
+class CreateInitialSchema < ActiveRecord::Migration[7.1]
   def self.up
     create_table "people", :force => true do |t|
     end

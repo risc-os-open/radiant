@@ -118,7 +118,7 @@ module Radiant
     end
 
     # Region sets
-    %w{page snippet layout configuration user preference extension}.each do |controller|
+    %w{page snippet layout configuration user preference}.each do |controller|
       attr_accessor controller
       alias_method "#{controller}s", controller
     end
@@ -147,7 +147,6 @@ module Radiant
       settings << nav_item("General", "/admin/configuration")
       settings << nav_item("Personal", "/admin/preferences/edit")
       settings << nav_item("Users", "/admin/users")
-      settings << nav_item("Extensions", "/admin/extensions")
       nav << settings
     end
 
@@ -158,110 +157,101 @@ module Radiant
       @user = load_default_user_regions
       @preference = load_default_preference_regions
       @configuration = load_default_configuration_regions
-      @extension = load_default_extension_regions
     end
 
     private
 
-    def load_default_page_regions
-      OpenStruct.new.tap do |page|
-        page.edit = RegionSet.new do |edit|
-          edit.main.concat %w{edit_header edit_form edit_popups}
-          edit.form.concat %w{edit_title edit_extended_metadata edit_page_parts}
-          edit.layout.concat %w{edit_layout edit_type edit_status edit_published_at}
-          edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+      def load_default_page_regions
+        OpenStruct.new.tap do |page|
+          page.edit = RegionSet.new do |edit|
+            edit.main.concat %w{edit_header edit_form edit_popups}
+            edit.form.concat %w{edit_title edit_extended_metadata edit_page_parts}
+            edit.layout.concat %w{edit_layout edit_type edit_status edit_published_at}
+            edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+          end
+          page.index = RegionSet.new do |index|
+            index.sitemap_head.concat %w{title_column_header status_column_header actions_column_header}
+            index.node.concat %w{title_column status_column actions_column}
+          end
+          page.remove = page.children = page.index
+          page.new = page._part = page.edit
         end
-        page.index = RegionSet.new do |index|
-          index.sitemap_head.concat %w{title_column_header status_column_header actions_column_header}
-          index.node.concat %w{title_column status_column actions_column}
-        end
-        page.remove = page.children = page.index
-        page.new = page._part = page.edit
       end
-    end
 
-    def load_default_user_regions
-      OpenStruct.new.tap do |user|
-        user.edit = RegionSet.new do |edit|
-          edit.main.concat %w{edit_header edit_form}
-          edit.form.concat %w{edit_name edit_email edit_username edit_password
-                              edit_roles edit_locale edit_notes}
-          edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+      def load_default_user_regions
+        OpenStruct.new.tap do |user|
+          user.edit = RegionSet.new do |edit|
+            edit.main.concat %w{edit_header edit_form}
+            edit.form.concat %w{edit_name edit_email edit_username edit_password
+                                edit_roles edit_locale edit_notes}
+            edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+          end
+          user.index = RegionSet.new do |index|
+            index.thead.concat %w{title_header roles_header actions_header}
+            index.tbody.concat %w{title_cell roles_cell actions_cell}
+            index.bottom.concat %w{new_button}
+          end
+          user.new = user.edit
         end
-        user.index = RegionSet.new do |index|
-          index.thead.concat %w{title_header roles_header actions_header}
-          index.tbody.concat %w{title_cell roles_cell actions_cell}
-          index.bottom.concat %w{new_button}
-        end
-        user.new = user.edit
       end
-    end
 
-    def load_default_preference_regions
-      OpenStruct.new.tap do |preference|
-        preference.edit = RegionSet.new do |edit|
-          edit.main.concat %w{edit_header edit_form}
-          edit.form.concat %w{edit_name edit_email edit_username edit_password edit_locale}
-          edit.form_bottom.concat %w{edit_buttons}
+      def load_default_preference_regions
+        OpenStruct.new.tap do |preference|
+          preference.edit = RegionSet.new do |edit|
+            edit.main.concat %w{edit_header edit_form}
+            edit.form.concat %w{edit_name edit_email edit_username edit_password edit_locale}
+            edit.form_bottom.concat %w{edit_buttons}
+          end
         end
       end
-    end
 
-    def load_default_snippet_regions
-      OpenStruct.new.tap do |snippet|
-        snippet.edit = RegionSet.new do |edit|
-          edit.main.concat %w{edit_header edit_form}
-          edit.form.concat %w{edit_title edit_content edit_filter}
-          edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+      def load_default_snippet_regions
+        OpenStruct.new.tap do |snippet|
+          snippet.edit = RegionSet.new do |edit|
+            edit.main.concat %w{edit_header edit_form}
+            edit.form.concat %w{edit_title edit_content edit_filter}
+            edit.form_bottom.concat %w{edit_buttons edit_timestamp}
+          end
+          snippet.index = RegionSet.new do |index|
+            index.top.concat %w{}
+            index.thead.concat %w{title_header modify_header}
+            index.tbody.concat %w{title_cell modify_cell}
+            index.bottom.concat %w{new_button}
+          end
+          snippet.new = snippet.edit
         end
-        snippet.index = RegionSet.new do |index|
-          index.top.concat %w{}
-          index.thead.concat %w{title_header modify_header}
-          index.tbody.concat %w{title_cell modify_cell}
-          index.bottom.concat %w{new_button}
-        end
-        snippet.new = snippet.edit
       end
-    end
 
-    def load_default_layout_regions
-      OpenStruct.new.tap do |layout|
-        layout.edit = RegionSet.new do |edit|
-          edit.main.concat %w{edit_header edit_form}
-          edit.form.concat %w{edit_title edit_extended_metadata edit_content}
-          edit.form_bottom.concat %w{reference_links edit_buttons edit_timestamp}
+      def load_default_layout_regions
+        OpenStruct.new.tap do |layout|
+          layout.edit = RegionSet.new do |edit|
+            edit.main.concat %w{edit_header edit_form}
+            edit.form.concat %w{edit_title edit_extended_metadata edit_content}
+            edit.form_bottom.concat %w{reference_links edit_buttons edit_timestamp}
+          end
+          layout.index = RegionSet.new do |index|
+            index.top.concat %w{}
+            index.thead.concat %w{title_header actions_header}
+            index.tbody.concat %w{title_cell actions_cell}
+            index.bottom.concat %w{new_button}
+          end
+          layout.new = layout.edit
         end
-        layout.index = RegionSet.new do |index|
-          index.top.concat %w{}
-          index.thead.concat %w{title_header actions_header}
-          index.tbody.concat %w{title_cell actions_cell}
-          index.bottom.concat %w{new_button}
-        end
-        layout.new = layout.edit
       end
-    end
 
-    def load_default_configuration_regions
-      OpenStruct.new.tap do |configuration|
-        configuration.show = RegionSet.new do |show|
-          show.user.concat %w{preferences}
-          show.config.concat %w{site defaults users}
-        end
-        configuration.edit = RegionSet.new do |edit|
-          edit.main.concat %w{edit_header edit_form}
-          edit.form.concat %w{edit_site edit_defaults edit_users}
-          edit.form_bottom.concat %w{edit_buttons}
+      def load_default_configuration_regions
+        OpenStruct.new.tap do |configuration|
+          configuration.show = RegionSet.new do |show|
+            show.user.concat %w{preferences}
+            show.config.concat %w{site defaults users}
+          end
+          configuration.edit = RegionSet.new do |edit|
+            edit.main.concat %w{edit_header edit_form}
+            edit.form.concat %w{edit_site edit_defaults edit_users}
+            edit.form_bottom.concat %w{edit_buttons}
+          end
         end
       end
-    end
 
-    def load_default_extension_regions
-      OpenStruct.new.tap do |extension|
-        extension.index = RegionSet.new do |index|
-          index.thead.concat %w{title_header website_header version_header}
-          index.tbody.concat %w{title_cell website_cell version_cell}
-        end
-      end
-    end
   end
 end

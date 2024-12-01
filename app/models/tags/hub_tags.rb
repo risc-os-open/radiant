@@ -1,5 +1,15 @@
-# See "hub_tags_extension.rb" for details.
-
+# Hub tags
+# ========
+#
+# Define tags for Hub integration.
+#
+#
+# History
+# -------
+#
+# 2011-03-06 (ADH): Imported into Radiant 0.9.1 as an Extension.
+# 2024-12-01 (ADH): Moved into Rails 7 rebuild core.
+#
 module Tags::HubTags
   require 'hub_sso_lib'
 
