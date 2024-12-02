@@ -19,6 +19,9 @@ class ApplicationController < ActionController::Base
   # Rescue all exceptions (bad form) to rotate the Hub key (good) and render or
   # raise the exception again (rapid reload for default handling).
   #
+  # Some old Rails-2 style handling by Radiant is wrapped up in here too, via
+  # calling a method which subclasses can override if they wish.
+  #
   rescue_from ::Exception, with: :on_error_rotate_and_raise
 
   before_action :set_current_user
@@ -64,14 +67,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def rescue_action_in_public(exception)
-    case exception
-      when ActiveRecord::RecordNotFound, ActionController::UnknownController, ActionController::UnknownAction, ActionController::RoutingError
-        render :template => "site/not_found", :status => 404
-      else
-        super
+  protected
+
+    # Overridable in subclasses and invoked from #on_error_rotate_and_raise.
+    # Subclass implementation should handle whichever exceptions they want via
+    # a 'case' statement; in 'else', you must call 'super'.
+    #
+    def handle_special_case_exception(exception)
+      case exception
+        when ActiveRecord::RecordNotFound, AbstractController::ActionNotFound
+          render template: 'site/not_found', status: 404
+      end
     end
-  end
 
   private
 
@@ -111,6 +118,8 @@ class ApplicationController < ActionController::Base
     # rotated key, so you're logged out.
     #
     def on_error_rotate_and_raise(exception)
+      handle_special_case_exception(exception)
+
       hubssolib_get_session_proxy()
       hubssolib_afterwards()
 
@@ -123,7 +132,13 @@ class ApplicationController < ActionController::Base
       end
 
       session[:last_exception_at] = Time.now.iso8601(1)
-      render 'exception', locals: { exception: exception }
+
+      # The top-of-this-method call to #handle_special_case_exception may have
+      # caused a redirection or render already, so check #processed? for that.
+      #
+      unless performed?
+        render 'exception', locals: { exception: exception }
+      end
     end
 
 end

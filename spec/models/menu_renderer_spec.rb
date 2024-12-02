@@ -96,12 +96,6 @@ describe MenuRenderer do
     end
   end
 
-  describe '#menu_renderer_modules' do
-    it 'should return a collection of modules for additional extension' do
-      special_page.menu_renderer_modules.should == [SpecialTestMenuRenderer]
-    end
-  end
-
   describe '#allowed_child_classes' do
     it 'should return a collection of classes to be used for child pages' do
       special_page.allowed_children_cache = 'Page,SpecialChildPage'

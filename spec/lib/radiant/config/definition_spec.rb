@@ -80,7 +80,7 @@ describe "Radiant::Configuration::Definition" do
       setting = Radiant::Configuration.find_by_key('valid')
       lambda{setting.value = "Ape"}.should raise_error
       setting.valid?.should be_false
-      setting.errors.on(:value).should == "That's no monkey"
+      setting.errors[:value].should == "That's no monkey"
     end
 
     it "should allow a valid value to be set" do

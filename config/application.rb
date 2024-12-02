@@ -30,5 +30,16 @@ module Radiant
 
     # https://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-memorystore
     config.cache_store = :memory_store, { size: 32*1024*1024 }
+
+    # Custom validation error handling.
+    #
+    config.action_view.field_error_proc = Proc.new do |html_tag, instance|
+      if html_tag !~ /label/
+        error_span = tag.span([instance.error_message].flatten.first, class: 'error')
+        tag.span(html_tag << error_span, class: 'error-with-field')
+      else
+        html_tag
+      end
+    end
   end
 end

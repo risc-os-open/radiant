@@ -96,15 +96,15 @@ describe Page, 'validations' do
   it 'should not be valid when class name is not a descendant of page' do
     @page.class_name = 'Object'
     @page.valid?.should == false
-    assert_not_nil @page.errors.on(:class_name)
-    @page.errors.on(:class_name).should == 'must be set to a valid descendant of Page'
+    assert_not_nil @page.errors[:class_name]
+    @page.errors[:class_name].should == 'must be set to a valid descendant of Page'
   end
 
   it 'should not be valid when class name is not a descendant of page and it is set through mass assignment' do
     @page.attributes = {:class_name => 'Object' }
     @page.valid?.should == false
-    assert_not_nil @page.errors.on(:class_name)
-    @page.errors.on(:class_name).should == 'must be set to a valid descendant of Page'
+    assert_not_nil @page.errors[:class_name]
+    @page.errors[:class_name].should == 'must be set to a valid descendant of Page'
   end
 
   it 'should be valid when class name is page or empty or nil' do
@@ -596,16 +596,6 @@ describe Page, "loading subclasses when upgrading from 0.5.x where class_name co
   it "should not attempt to search for missing subclasses" do
     Page.connection.should_not_receive(:select_values).with("SELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL")
     Page.load_subclasses
-  end
-end
-
-describe Page, 'loading subclasses after bootstrap' do
-  it "should find subclasses in extensions" do
-    defined?(BasicExtensionPage).should_not be_nil
-  end
-
-  it "should not adjust the display name of subclasses found in extensions" do
-    BasicExtensionPage.display_name.should_not match(/not installed/)
   end
 end
 

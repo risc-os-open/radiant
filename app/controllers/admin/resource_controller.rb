@@ -130,16 +130,16 @@ class Admin::ResourceController < ApplicationController
 
   protected
 
-    def rescue_action(exception)
+    def handle_special_case_exception(exception)
       case exception
-      when ActiveRecord::RecordInvalid
-        response_for :invalid
-      when ActiveRecord::StaleObjectError
-        response_for :stale
-      when ActiveRecord::RecordNotFound
-        response_for :not_found
-      else
-        super
+        when ActiveRecord::RecordInvalid
+          response_for :invalid
+        when ActiveRecord::StaleObjectError
+          response_for :stale
+        when ActiveRecord::RecordNotFound
+          response_for :not_found
+        else
+          super
       end
     end
 

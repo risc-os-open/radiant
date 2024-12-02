@@ -81,14 +81,15 @@ class Page < ApplicationRecord
   class_attribute :default_child
   self.default_child = self
 
-  # def layout_with_inheritance
-  #   unless layout_without_inheritance
-  #     parent.layout if parent?
-  #   else
-  #     layout_without_inheritance
-  #   end
-  # end
-  # alias_method_chain :layout, :inheritance
+  def layout
+    if self.layout_id.present?
+      Layout.find_by_id(self.layout_id)
+    elsif self.parent?
+      self.parent.layout
+    else
+      nil
+    end
+  end
 
   def description
     self["description"]

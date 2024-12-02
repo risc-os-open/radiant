@@ -30,13 +30,15 @@ class Admin::PagesController < Admin::ResourceController
 
   def preview
     Page.transaction do
-      page_class = Page.descendants.include?(model_class) ? model_class : Page
+      page_class  = Page.descendants.include?(model_class) ? model_class : Page
+      safe_params = params.require(:page).permit(Page.permitted_params())
+
       if request.referer =~ %r{/admin/pages/(\d+)/edit}
         page = Page.find($1).becomes(page_class)
-        page.update!(params.require(:page).permit(Page.permitted_params()))
+        page.update!(safe_params)
         page.published_at ||= Time.now
       else
-        page = page_class.new(params[:page])
+        page = page_class.new(safe_params)
         page.published_at = page.updated_at = page.created_at = Time.now
         page.parent = Page.find($1) if request.referer =~ %r{/admin/pages/(\d+)/children/new}
       end

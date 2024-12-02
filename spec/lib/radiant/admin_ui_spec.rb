@@ -17,11 +17,11 @@ describe Radiant::AdminUi do
   it "should create a new nav tab" do
     @admin.nav_tab("Content").should be_kind_of(Radiant::AdminUi::NavTab)
   end
-  
+
   it "should create a new nav item" do
     @admin.nav_item("Foo", "/admin/foo").should be_kind_of(Radiant::AdminUi::NavSubItem)
   end
-  
+
   it "should load the default navigation tabs and sub-items" do
     @admin.initialize_nav
     @admin.nav.should have(3).items
@@ -74,7 +74,7 @@ describe Radiant::AdminUi do
     layout.index.thead.should == %w{title_header actions_header}
     layout.index.tbody.should == %w{title_cell actions_cell}
     layout.index.bottom.should == %w{new_button}
-    
+
     layout.new.should == layout.edit
   end
 
@@ -92,15 +92,8 @@ describe Radiant::AdminUi do
     user.preferences.main.should == %w{edit_header edit_form}
     user.preferences.form.should == %w{edit_name edit_email edit_username edit_password edit_locale}
     user.preferences.form_bottom.should == %w{edit_buttons}
-    
+
     user.new.should == user.edit
-  end
-  
-  it "should load the default extension regions" do
-    ext = @admin.extension
-    ext.index.should_not be_nil
-    ext.index.thead.should == %w{title_header website_header version_header}
-    ext.index.tbody.should == %w{title_cell website_cell version_cell}
   end
 end
 

@@ -17,9 +17,9 @@ begin
   task :default => :spec
   task :stats => "spec:statsetup"
 
-  desc 'Run all specs in spec directory (excluding plugin & generator specs)'
+  desc 'Run all specs in spec directory (excluding plugin specs)'
   task :spec => spec_prereq do
-    errors = %w(spec:integration spec:models spec:controllers spec:views spec:helpers spec:lib spec:generators spec:extensions).collect do |task|
+    errors = %w(spec:integration spec:models spec:controllers spec:views spec:helpers spec:lib).collect do |task|
       begin
         puts %{\nRunning #{task.gsub('spec:', '').titlecase} Spec Task}
         Rake::Task[task].invoke
@@ -38,23 +38,23 @@ begin
   end
 
   namespace :spec do
-    desc "Run all specs in spec directory with RCov (excluding plugin & generator specs)"
+    desc "Run all specs in spec directory with RCov (excluding plugin pecs)"
     Spec::Rake::SpecTask.new(:rcov) do |t|
       t.spec_opts = ['--options', "\"#{RADIANT_ROOT}/spec/spec.opts\""]
       t.spec_files = FileList.new('spec/**/*_spec.rb') do |fl|
-        fl.exclude(/generator/)
+        fl.exclude(/plugin/)
       end
       t.rcov = true
       t.rcov_opts = lambda do
         IO.readlines("#{RADIANT_ROOT}/spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
       end
     end
-  
-    desc "Print Specdoc for all specs (excluding plugin & generator specs)"
+
+    desc "Print Specdoc for all specs (excluding plugin specs)"
     Spec::Rake::SpecTask.new(:doc) do |t|
       t.spec_opts = ["--format", "specdoc", "--dry-run"]
       t.spec_files = FileList.new('spec/**/*_spec.rb') do |fl|
-        fl.exclude(/generator/)
+        fl.exclude(/plugin/)
       end
     end
 
@@ -75,38 +75,13 @@ begin
     #   t.cucumber_opts = ["--format","progress"]
     #   t.feature_pattern = "#{RADIANT_ROOT}/features/**/*.feature"
     # end
-  
-    desc 'Run all specs in spec/generators directory'
-    task :generators => spec_prereq do
-      errors = ['spec:generators:extension_controller', 'spec:generators:extension_mailer', 
-                'spec:generators:extension_migration', 'spec:generators:extension_model',
-                'spec:generators:extension', 'spec:generators:instance'].collect do |task|
-        begin
-          Rake::Task[task].invoke
-          nil
-        rescue => e
-          task
-        end
-      end.compact
-      abort "Errors running #{errors.to_sentence}!" if errors.any?
-    end
-  
-    namespace :generators do
-      [:extension_controller, :extension_mailer, :extension_migration, :extension_model, :extension, :instance].each do |generator|
-        desc "Run the spec at spec/geneartors/#{generator}_generator_spec.rb"
-        Spec::Rake::SpecTask.new(generator => spec_prereq) do |t|
-          t.spec_opts = ['--options', "\"#{RADIANT_ROOT}/spec/spec.opts\""]
-          t.spec_files = [File.join(RADIANT_ROOT, "spec/generators/#{generator}_generator_spec.rb")]
-        end
-      end
-    end
-  
+
     desc "Run the specs under vendor/plugins (except RSpec's own)"
     Spec::Rake::SpecTask.new(:plugins => spec_prereq) do |t|
       t.spec_opts = ['--options', "\"#{RADIANT_ROOT}/spec/spec.opts\""]
       t.spec_files = FileList['vendor/plugins/**/spec/**/*_spec.rb'].exclude('vendor/plugins/rspec/*').exclude("vendor/plugins/rspec-rails/*")
     end
-  
+
     namespace :plugins do
       desc "Runs the examples for rspec_on_rails"
       Spec::Rake::SpecTask.new(:rspec_on_rails) do |t|
@@ -124,13 +99,11 @@ begin
       ::STATS_DIRECTORIES << %w(Helper\ specs spec/helpers) if File.exist?('spec/helpers')
       ::STATS_DIRECTORIES << %w(Library\ specs spec/lib) if File.exist?('spec/lib')
       ::STATS_DIRECTORIES << %w(Integration\ specs spec/integration) if File.exist?('spec/integration')
-      ::STATS_DIRECTORIES << %w(Generator\ specs spec/generators) if File.exist?('spec/generators')
       ::CodeStatistics::TEST_TYPES << "Model specs" if File.exist?('spec/models')
       ::CodeStatistics::TEST_TYPES << "View specs" if File.exist?('spec/views')
       ::CodeStatistics::TEST_TYPES << "Controller specs" if File.exist?('spec/controllers')
       ::CodeStatistics::TEST_TYPES << "Helper specs" if File.exist?('spec/helpers')
       ::CodeStatistics::TEST_TYPES << "Library specs" if File.exist?('spec/lib')
-      ::CodeStatistics::TEST_TYPES << "Generator specs" if File.exist?('spec/generators')
       ::STATS_DIRECTORIES.delete_if {|a| a[0] =~ /test/}
     end
 
@@ -166,7 +139,7 @@ begin
           $stderr.puts "No server running."
         else
           $stderr.puts "Shutting down spec_server."
-          system("kill", "-s", "TERM", File.read(daemonized_server_pid).strip) && 
+          system("kill", "-s", "TERM", File.read(daemonized_server_pid).strip) &&
           File.delete(daemonized_server_pid)
         end
       end
@@ -186,32 +159,26 @@ rescue LoadError
   task :spec_prereq do
     puts "Required dependencies RSpec, RSpec-Rails or Cucumber are missing.\nRun 'rake gems:install RAILS_ENV=test'"
   end
-  
+
   task :spec => :spec_prereq
   namespace :spec do
-    %w(integration models controllers views helpers lib generators).each do |t|
+    %w(integration models controllers views helpers lib).each do |t|
       task t => :spec_prereq
     end
-    
-    namespace :generators do
-      [:extension_controller, :extension_mailer, :extension_migration, :extension_model, :extension, :instance].each do |t|
-        task t => :spec_prereq
-      end
-    end
-    
+
     task :plugins => :spec_prereq
     namespace :plugins do
       task :rspec_on_rails => :spec_prereq
     end
-    
+
     task :statsetup => :spec_prereq
-    
+
     namespace :db do
       namespace :fixtures do
         task :load => :spec_prereq
       end
     end
-    
+
     namespace :server do
       [:start, :stop, :restart].each do |t|
         task t => :spec_prereq

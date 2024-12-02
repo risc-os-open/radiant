@@ -4,8 +4,8 @@ module UserActionObserverConcern
   extend ActiveSupport::Concern
 
   included do
-    before_create     ->(obj) { obj.created_by = obj.current_user }
-    before_validation ->(obj) { obj.updated_by = obj.current_user }
+    after_initialize  ->(obj) { obj.created_by ||= User.current_user }
+    before_validation ->(obj) { obj.updated_by   = User.current_user }
   end
 
   def current_user=(user); self.class.current_user = user; end

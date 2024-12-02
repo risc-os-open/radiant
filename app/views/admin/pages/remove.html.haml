@@ -4,7 +4,7 @@
   = t('remove_pages', :pages => pages)
 
 %p
-  = t('text.pages.remove_warning', :pages => pages)
+  = t('text.pages.remove_warning', :pages => pages).html_safe()
 
 .inset
   %table.index#site_map

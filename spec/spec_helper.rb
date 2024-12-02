@@ -6,10 +6,6 @@ unless defined? SPEC_ROOT
   case
   when ENV["RADIANT_ENV_FILE"]
     require ENV["RADIANT_ENV_FILE"]
-  when File.dirname(__FILE__) =~ %r{vendor/radiant/vendor/extensions}
-    env = "#{File.expand_path(File.dirname(__FILE__) + "/../../../")}/config/environment"
-    puts "requiring #{env}"
-    require env
   else
     env = "#{File.expand_path(File.dirname(__FILE__) + "/../")}/config/environment"
     puts "requiring #{env}"
@@ -23,7 +19,7 @@ unless defined? SPEC_ROOT
   #     require File.expand_path(SPEC_ROOT + "/../config/environment")
   #   end
   # end
-  
+
   require 'spec'
   require 'spec/rails'
   require 'dataset'
@@ -66,21 +62,7 @@ unless defined? SPEC_ROOT
     require matcher
   end
 
-  module Spec
-    module Application
-      module ExampleExtensions
-        def rails_log
-          log = IO.read(Rails.root + '/log/test.log')
-          log.should_not be_nil
-          log
-        end
-      end
-    end
-  end
-
   Spec::Runner.configure do |config|
-    config.include Spec::Application::ExampleExtensions
-
     config.use_transactional_fixtures = true
     config.use_instantiated_fixtures  = false
     config.fixture_path = Rails.root + '/spec/fixtures/'
