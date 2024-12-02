@@ -760,27 +760,35 @@ module Tags::StandardTags
         [size="32px"] /></code></pre>
   }
   tag 'gravatar' do |tag|
-    page = tag.locals.page
-    name = (tag.attr['name'] || page.created_by.name)
-    rating = (tag.attr['rating'] || 'G')
-    size = (tag.attr['size'] || '32px')
-    user = User.find_by(name: name)
-    email = user ? user.email : nil
+    page             = tag.locals.page
+    name             = (tag.attr['name' ] || page.created_by.name)
+    rating           = (tag.attr['rating'] || 'G')
+    size             = (tag.attr['size' ] || '32px')
+    user             = User.find_by(name: name)
+    email            = user ? user.email : nil
     local_avatar_url = image_path("admin/avatar_#{([size.to_i] * 2).join('x')}.png")
-    default_avatar_url = "#{request.protocol}#{request.host_with_port}#{local_avatar_url}"
 
     unless email.blank?
-      url = '//gravatar.com/avatar/'
+      # Build the Gravatar url
+      url  = 'https://gravatar.com/avatar/'
       url << "#{Digest::MD5.new.update(email)}?"
       url << "rating=#{rating}"
       url << "&size=#{size.to_i}"
-      url << "&default=#{default_avatar_url}" unless request.host_with_port == 'testhost.tld'
+      url << '&d=403'
+
       # Test the Gravatar url
-      require 'open-uri'
-      begin; open "http:#{url}", :proxy => true
-      rescue; local_avatar_url
-      else; url
+      uri = URI.parse(url)
+      request = Net::HTTP.new(uri.host, uri.port)
+      request.use_ssl = true
+
+      success = begin
+        response = request.request_head(uri.request_uri)
+        (response.code.to_i rescue 500) < 400 # Consider 2xx OK variants or 3xx redirections as successes
+      rescue Errno::ENOENT # Can't even find the server
+        false
       end
+
+      success ? url : local_avatar_url
     else
       local_avatar_url
     end

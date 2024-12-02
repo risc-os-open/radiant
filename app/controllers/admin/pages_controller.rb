@@ -58,6 +58,7 @@ class Admin::PagesController < Admin::ResourceController
         self.model.slug = '/'
       end
       self.model.parent_id = params[:page_id]
+      self.model.parts = [ PagePart.new(name: 'body') ]
     end
 
     def model_class

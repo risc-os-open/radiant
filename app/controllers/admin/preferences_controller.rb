@@ -25,7 +25,12 @@ class Admin::PreferencesController < ApplicationController
     if success
       redirect_to admin_configuration_path()
     else
-      flash[:error] = t('preferences_controller.error_updating')
+      cleaned_up_error_array = @user.errors.attribute_names.map do | attr |
+        joined_errors_for_attr = @user.errors.messages_for(attr).join(', ')
+        "'#{User.human_attribute_name(attr)}' - #{joined_errors_for_attr}"
+      end
+
+      flash[:error] = t('preferences_controller.error_updating', errors: cleaned_up_error_array.join(', '))
       render :edit
     end
   end

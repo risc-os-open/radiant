@@ -1,3 +1,5 @@
+require 'net/http'
+
 module ApplicationHelper
   include LocalTime
   include Admin::RegionsHelper
@@ -169,22 +171,28 @@ module ApplicationHelper
     # Default image url to be used when no gravatar is found
     # or when an image exceeds the rating parameter.
     local_avatar_url = image_path("admin/avatar_#{([options[:size].to_i] * 2).join('x')}.png")
-    default_avatar_url = "#{request.protocol}#{request.host_with_port}#{ActionController::Base.relative_url_root}#{local_avatar_url}"
-    options[:default] ||= default_avatar_url
 
     unless email.blank?
-      # Build the Gravatar url.
-      url = '//gravatar.com/avatar/'
+      # Build the Gravatar url
+      url  = 'https://gravatar.com/avatar/'
       url << "#{Digest::MD5.new.update(email)}?"
       url << "rating=#{options[:rating]}" if options[:rating]
       url << "&size=#{options[:size]}" if options[:size]
-      url << "&default=#{options[:default]}" if options[:default]
+      url << '&d=404'
+
       # Test the Gravatar url
-      require 'open-uri'
-      begin; open "http:#{url}", :proxy => true
-      rescue; local_avatar_url
-      else; url
+      uri = URI.parse(url)
+      request = Net::HTTP.new(uri.host, uri.port)
+      request.use_ssl = true
+
+      success = begin
+        response = request.request_head(uri.request_uri)
+        (response.code.to_i rescue 500) < 400 # Consider 2xx OK variants or 3xx redirections as successes
+      rescue Errno::ENOENT # Can't even find the server
+        false
       end
+
+      success ? url : local_avatar_url
     else
       local_avatar_url
     end

@@ -37,6 +37,7 @@ class User < ApplicationRecord
   #
   def self.permitted_unprivileged_params
     [
+      :lock_version,
       :name,
       :email,
       :login,

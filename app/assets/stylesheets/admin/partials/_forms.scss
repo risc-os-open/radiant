@@ -477,8 +477,7 @@ body.single_form {
 
 body.edit_user, body.edit_personal_preferences {
   #avatar {
-    left: 26em;
-    position: absolute;
+    float: right;
     text-align: center;
     width: 102px;
 

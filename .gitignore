@@ -32,9 +32,6 @@
 !/tmp/storage/
 !/tmp/storage/.keep
 
-# Ignore compiled assets
-/app/assets/builds
-
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 

@@ -140,7 +140,7 @@ en:
   powered_by: 'Powered by'
   preferences: 'Preferences'
   preferences_controller:
-    error_updating: 'There was an error updating your preferences.'
+    error_updating: 'Unable to update your preferences: %{errors}'
     updated: 'Your preferences have been updated.'
   preview: 'Preview'
   published: 'Published'
