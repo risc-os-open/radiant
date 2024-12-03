@@ -234,7 +234,10 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
     # Load the configuration file, if provided
 
     begin
-      configuration = YAML.load_file( File.join( base, dir, 'config', 'config.yml' ) )
+      configuration = YAML.load_file(
+        File.join( base, dir, 'config', 'config.yml' ),
+        permitted_classes: [ Time ]
+      )
     rescue
       configuration = {}
     end
