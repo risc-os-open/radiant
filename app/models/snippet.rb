@@ -1,5 +1,6 @@
 class Snippet < ApplicationRecord
   include FilterableConcern
+  include UserActionObserverConcern
 
   # Default Order
   default_scope { order(name: :asc) }
