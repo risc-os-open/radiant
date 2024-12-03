@@ -44,5 +44,3 @@
       - Radiant::Configuration.order(key: :asc).pluck(:key).each do |site_setting|
         %p.ruled
           = show_config site_setting, :class => (site_setting =~ /host$/ ? 'uri' : nil)
-    - config.users {}
-    - config.defaults {}

@@ -243,7 +243,7 @@ module Radiant
         OpenStruct.new.tap do |configuration|
           configuration.show = RegionSet.new do |show|
             show.user.concat %w{preferences}
-            show.config.concat %w{site defaults users}
+            show.config.concat %w{site}
           end
           configuration.edit = RegionSet.new do |edit|
             edit.main.concat %w{edit_header edit_form}

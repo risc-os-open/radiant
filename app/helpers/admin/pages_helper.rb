@@ -3,7 +3,7 @@ module Admin::PagesHelper
   include Admin::ReferencesHelper
 
   def class_of_page
-    @page.nil? ? super : @page.class
+    @page.nil? ? Page : @page.class
   end
 
   # for 'def filter' special case with @page set, see ReferencesHelper.
