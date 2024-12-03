@@ -23,7 +23,3 @@ test:
 production:
   <<: *dbinfo
   database: radiant
-  migrations_paths:
-    - "db/migrate"
-    # UNCOMMENT AFTER DATA LOAD IS COMPLETED
-    # - "db/migrate_after_transfer"
