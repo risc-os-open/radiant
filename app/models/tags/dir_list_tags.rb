@@ -55,6 +55,9 @@ Certain magic directories are ignored (CVS, .svn).
     raise TagError.new("You must make environment variable SERVER_DOCUMENT_ROOT available to Radiant") if (docroot.nil?)
 
     "<notextile>" + recursive_directory_list_in_li_tags(docroot, dir) + "</notextile>"
+
+  rescue Errno::ENOENT
+    cannot_find_folder(docroot, dir)
   end
 
   desc %{
@@ -147,6 +150,13 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
   # as a flat unsorted list. The last parameter is 'false' to avoid scanning
   # to a level beyond the current directory.
   #
+  # This will raise Errno::ENOENT if 'base' and 'dir' do not yield a valid
+  # folder path. Callers compiling HTML output from the results of this method
+  # should rescue that exception and use #cannot_find_folder to generate an
+  # appropriate HTML error message which the page editor will see in-page (as
+  # will all other users if the error is in a saved, published page, but this
+  # is still better than an uncaught exception leading to a 500 response).
+  #
   require 'find'
   #
   def recursive_directory_list(base, dir, recurse = true)
@@ -204,6 +214,9 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
 
     html = '<li>There are no files currently available.</li>' if html.empty?
     return html
+
+  rescue Errno::ENOENT
+    cannot_find_folder(base, dir)
   end
 
   # Ripped straight out of ActionView::Helpers::NumberHelper.
@@ -392,6 +405,18 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
 
     html = '<p>There are no files currently available.</p>' if (list.empty?)
     return html
+
+  rescue Errno::ENOENT
+    cannot_find_folder(base, dir)
   end
 
+  # Small support method for a few of the tags above, returning a 'cannot find
+  # folder "foo" in base "bar"' error String in render-safe HTML.
+  #
+  def cannot_find_folder(base, dir)
+    safe_dir  = ERB::Util.h(dir)
+    safe_base = ERB::Util.h(base)
+
+    "<notextile><span style=\"font-weight: bold; color: #C00;\">Cannot find #{safe_dir.inspect} within #{safe_base.inspect}</span></notextile>".html_safe()
+  end
 end
