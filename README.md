@@ -1,8 +1,10 @@
-== Welcome to Radiant
+## Welcome to Radiant
 
 Radiant is a no-fluff, open source content management system designed for
 small teams. It is similar to Textpattern or MovableType, but is a general
 purpose content management system (not just a blogging engine).
+
+[![Build Status](https://secure.travis-ci.org/radiant/radiant.png?branch=1.x)](http://travis-ci.org/radiant/radiant)
 
 Radiant features:
 
@@ -19,22 +21,20 @@ Radiant features:
 * Built using Ruby on Rails
 * And much more...
 
+## License
 
-== License
-
-Radiant is released under the MIT license and is copyright (c) 2006-2009
+Radiant is released under the MIT license and is copyright (c) 2006-2018
 John W. Long and Sean Cribbs. A copy of the MIT license can be found in the
 LICENSE file.
 
-
-== Installation and Setup
+## Installation and Setup
 
 Radiant is a traditional Ruby on Rails application, meaning that you can
 configure and run it the way you would a normal Rails application.
 
 See the INSTALL file for more details.
 
-== Installation of a Prerelease
+### Installation of a Prerelease
 
 As Radiant nears newer releases, you can experiment with any prerelease version.
 
@@ -44,26 +44,25 @@ Install the prerelease gem with the following command:
 
 This will install the gem with the prerelease name, for example: ‘radiant-0.9.0.rc2’.
 
-== Upgrading an Existing Project to a newer version
+### Upgrading an Existing Project to a newer version
 
 1. Update the Radiant assets from in your project:
 
-    $ rake radiant:update
+        $ rake radiant:update
 
 2. Migrate the database:
 
-    $ rake production db:migrate
+        $ rake production db:migrate
 
 3. Restart the web server
 
-== Development Requirements
+## Development Requirements
 
 To run tests you will need to have the following gems installed:
 
-  gem install ZenTest rspec rspec-rails cucumber webrat nokogiri
+    gem install ZenTest rspec rspec-rails cucumber webrat nokogiri sqlite3-ruby
 
-
-== Support
+## Support
 
 The best place to get support is on the mailing list:
 
