@@ -16,9 +16,9 @@ gem "puma", ">= 5.0"
 #
 gem "bootsnap", require: false
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+# For Windows or esoteric Unix/Linux-like distributions.
 #
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem 'tzinfo-data'
 
 # Use SCSS for stylesheets via a robust preprocessing step:
 # https://rubygems.org/gems/cssbundling-rails/
