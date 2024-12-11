@@ -1,7 +1,7 @@
 if CONFIGURED_DATABASE_AVAILABLE
 
   require_relative '../../app/models/application_record'
-  require_relative '../../app/models/radiant/config'
+  require_relative '../../app/models/radiant/configuration'
 
   Radiant.configuration do |config|
     config.define 'admin.title', :default => "Radiant CMS"
