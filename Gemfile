@@ -68,9 +68,7 @@ gem 'github-markup', '~> 5.0'
 
 # HTML processing [https://rubygems.org/gems/html-pipeline]
 #
-# TODO: v3.2.1 breaks things...
-#
-gem 'html-pipeline', '= 3.2.0'
+gem 'html-pipeline', '~> 3.2'
 
 # RSS parsing for the news feed extension.
 #

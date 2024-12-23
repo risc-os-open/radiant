@@ -122,8 +122,8 @@ GEM
       railties (>= 5.1)
     highline (3.1.1)
       reline
-    html-pipeline (3.2.0)
-      selma (~> 0.1)
+    html-pipeline (3.2.2)
+      selma (~> 0.4)
       zeitwerk (~> 2.5)
     hubssolib (2.1.0)
     i18n (1.14.6)
@@ -280,7 +280,7 @@ DEPENDENCIES
   github-markup (~> 5.0)
   haml-rails (~> 2.0)
   highline (~> 3.1)
-  html-pipeline (= 3.2.0)
+  html-pipeline (~> 3.2)
   hubssolib (~> 2.0)
   i18n-language-mapping (~> 0.1)
   jsbundling-rails
