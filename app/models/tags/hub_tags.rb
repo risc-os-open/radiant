@@ -56,6 +56,6 @@ page type which bypasses caching, such as NewsPage.
   }
   tag "hubssolib_flash_tags" do |tag|
     page = tag.locals.page
-    hubssolib_flash_tags
+    apphelp_flash()
   end
 end

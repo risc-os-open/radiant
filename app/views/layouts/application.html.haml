@@ -34,12 +34,7 @@
                     %li= link_to translate_with_default(sub_item.name), sub_item.relative_url, :class=>('current' if current_item?(sub_item))
             = yield :toolbar
       #main
-        - if flash[:notice]
-          #notice
-            %p= flash[:notice]
-        - if flash[:error]
-          #error
-            %p= flash[:error]
+        = apphelp_flash()
         #content
           = yield
 
