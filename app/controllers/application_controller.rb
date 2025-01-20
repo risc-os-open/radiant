@@ -111,6 +111,27 @@ class ApplicationController < ActionController::Base
       @body_classes.concat(%w(reversed))
     end
 
+    # Used for the unusual range of ".foo" formats that might arise for a
+    # family of XML-based responses; #on_error_rotate_and_raise needs to
+    # know what the format in which to render an error.
+    #
+    XML_LIKE_MAP = {
+      xml:           'application/xml',
+      rss:           'application/rss+xml',
+      rss20:         'application/rss+xml',
+      atom:          'application/atom+xml',
+      atom10:        'application/atom+xml',
+      rsd:           'application/rsd+xml',
+      googlesitemap: 'application/xml',
+    }
+
+    XML_LIKE_MAP.each do | format, mime |
+      known_mime = Mime::Type.lookup_by_extension(format)
+      Mime::Type.register(mime, format) if known_mime.blank?
+    end
+
+    XML_LIKE_FORMATS = XML_LIKE_MAP.keys.freeze
+
     # Renders an exception, retaining Hub login. Regenerate any exception
     # within five seconds of a previous render to 'raise' to default Rails
     # error handling, which (in non-Production modes) gives additional
@@ -118,13 +139,8 @@ class ApplicationController < ActionController::Base
     # rotated key, so you're logged out.
     #
     def on_error_rotate_and_raise(exception)
-      handle_special_case_exception(exception)
-
       hubssolib_get_session_proxy()
       hubssolib_afterwards()
-
-      Rails.logger.debug(exception.message)
-      Rails.logger.debug(exception.backtrace.join("\n"))
 
       if session[:last_exception_at].present?
         last_at = Time.parse(session[:last_exception_at]) rescue nil
@@ -132,12 +148,19 @@ class ApplicationController < ActionController::Base
       end
 
       session[:last_exception_at] = Time.now.iso8601(1)
+      locals                      = { exception: exception }
 
-      # The top-of-this-method call to #handle_special_case_exception may have
-      # caused a redirection or render already, so check #processed? for that.
+      # Depending on application, XML variants can be numerous - e.g. ".rss",
+      # ".rss20" and so-on - so use that as a default for anything that is not
+      # otherwise explicitly recognised as a JSON or HTML request.
       #
-      unless performed?
-        render 'exception', locals: { exception: exception }
+      respond_to do | format |
+        format.html { render 'exception', locals: locals }
+        format.json { render 'exception', locals: locals, formats: :json }
+
+        format.any(*XML_LIKE_FORMATS) do
+          render 'exception', locals: locals, formats: :xml
+        end
       end
     end
 
