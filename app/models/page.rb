@@ -48,8 +48,8 @@ class Page < ApplicationRecord
       :class_name,
       :status_id,
       :published_at,
-      parts_attributes:  [:id] +  PagePart.permitted_params(),
-      fields_attributes: [:id] + PageField.permitted_params(),
+      parts_attributes:  [:id, :_destroy] +  PagePart.permitted_params(),
+      fields_attributes: [:id, :_destroy] + PageField.permitted_params(),
     ]
   end
 
