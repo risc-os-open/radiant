@@ -1,24 +1,22 @@
 source "https://rubygems.org"
 
-ruby "3.3.5"
-
-gem "rails", "~> 7.2"
+gem "rails", "~> 8.0"
 
 # Use PostgresSQL
 #
-gem 'pg', '~> 1.5.8'
+gem 'pg', '~> 1.5'
 
 # Use the Puma web server [https://github.com/puma/puma]
 #
-gem "puma", ">= 5.0"
-
-# Reduces boot times through caching; required in config/boot.rb
-#
-gem "bootsnap", require: false
+gem 'puma', '~> 6.0'
 
 # For Windows or esoteric Unix/Linux-like distributions.
 #
 gem 'tzinfo-data'
+
+# Reduces boot times through caching; required in config/boot.rb
+#
+gem 'bootsnap', require: false
 
 # Use SCSS for stylesheets via a robust preprocessing step:
 # https://rubygems.org/gems/cssbundling-rails/
@@ -43,13 +41,13 @@ gem "haml-rails", "~> 2.0"
 
 # Use Hub for authentication [https://github.com/pond/hubssolib]
 #
-gem 'hubssolib', '~> 2.0', require: 'hub_sso_lib'
+gem 'hubssolib', '~> 2.1', require: 'hub_sso_lib'
 
 # Easy pagination [https://rubygems.org/gems/will_paginate]
 #
 gem 'will_paginate', '~> 4.0'
 
-# Tag-based templates (abandoneware, but runs on Ruby 2.6+, so Ruby 3.x should
+# Tag-based templates (abandonware, but runs on Ruby 2.6+, so Ruby 3.x should
 # also be fine) (https://github.com/jlong/radius)
 #
 gem 'radius', '~> 0.7'
@@ -60,7 +58,7 @@ gem 'RedCloth', '~> 4.3'
 
 # Markdown with GFM extensions etc. [https://rubygems.org/gems/commonmarker]
 #
-gem 'commonmarker', '~> 1.1'
+gem 'commonmarker', '~> 2.0'
 
 # Wider support for markup formats [https://rubygems.org/gems/github-markup]
 #

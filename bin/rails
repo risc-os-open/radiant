@@ -1,27 +1,4 @@
 #!/usr/bin/env ruby
-
-# https://github.com/colszowka/simplecov#getting-started
-#
-# "SimpleCov must be running in the process that you want the code coverage
-#  analysis to happen on. When testing a server process (e.g. a JSON API
-#  endpoint) via a separate test process (e.g. when using Selenium) where you
-#  want to see all code executed by the rails server, and not just code
-#  executed in your actual test files, you'll want to add something like this
-#  to the top of bin/rails [...]"
-#
-if ENV['RAILS_ENV'] == 'test'
-  require 'simplecov'
-
-  SimpleCov.profiles.define 'bookkeeper' do
-    load_profile 'rails' # simplecov defaults
-    add_filter 'spec'    # don't include the spec directory
-  end
-
-  SimpleCov.start 'bookkeeper'
-end
-
-# Below here, the original "bin/rails" code is unmodified.
-#
 APP_PATH = File.expand_path("../config/application", __dir__)
 require_relative "../config/boot"
 require "rails/commands"
