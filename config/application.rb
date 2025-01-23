@@ -20,26 +20,28 @@ Bundler.require(*Rails.groups)
 
 module Radiant
   class Application < Rails::Application
+
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    #
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    #
+    config.autoload_lib(ignore: %w(assets tasks))
 
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
 
+    config.time_zone = 'UTC'
+    config.active_record.default_timezone = :utc
+
     # https://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-memorystore
     #
     config.cache_store = :memory_store, { size: 32 * 1024 * 1024 }
-
-    # Permitted hosts.
-    #
-    config.hosts << "epsilon.arachsys.com"
 
     # Custom validation error handling.
     #
@@ -51,5 +53,33 @@ module Radiant
         html_tag
       end
     end
+
+    # Add the shared ROOL view components.
+    #
+    shared_views_path = if ENV['SHARED_VIEWS_PATH'].blank?
+      Rails.root.join('..', 'common', 'views')
+    else
+      ENV['SHARED_VIEWS_PATH']
+    end
+    config.paths['app/views'].unshift(shared_views_path)
+
+    # If running in a deployed environment, allow requests to Epsilon. Send
+    # e-mail via Beta, which is on the same local network.
+    #
+    if Socket.gethostname == 'epsilon'
+      config.hosts << "epsilon.arachsys.com"
+
+      config.action_mailer.delivery_method = :smtp
+      config.action_mailer.smtp_settings = {
+        address:        'beta.arachsys.com',
+        port:           25,
+        domain:         'epsilon.arachsys.com',
+        user_name:      nil,
+        password:       nil,
+        authentication: nil,
+        enable_starttls_auto: true
+      }
+    end
+
   end
 end

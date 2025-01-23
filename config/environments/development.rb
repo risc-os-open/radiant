@@ -6,8 +6,9 @@ Rails.application.configure do
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
-  # Do not eager load code on boot.
-  config.eager_load = false
+  # To ensure that every file gets a syntax check even in development, always
+  # load the entire application. It's quite small and doesn't take long.
+  config.eager_load = true
 
   # Show full error reports.
   config.consider_all_requests_local = true
@@ -36,6 +37,13 @@ Rails.application.configure do
 
   # Set localhost to be used by links generated in mailer templates.
   # config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+  # Support MailCatcher -  https://mailcatcher.me
+  #
+  if ENV['MAILCATCHER_ENABLED'].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = { :address => '127.0.0.1', :port => 1025 }
+  end
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
