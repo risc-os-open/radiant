@@ -14,24 +14,17 @@ gem 'puma', '~> 6.0'
 #
 gem 'tzinfo-data'
 
-# Reduces boot times through caching; required in config/boot.rb
-#
-gem 'bootsnap', require: false
-
-# Use SCSS for stylesheets via a robust preprocessing step:
-# https://rubygems.org/gems/cssbundling-rails/
+# Use SCSS for stylesheets via a robust preprocessing step [https://rubygems.org/gems/cssbundling-rails/]
 #
 gem 'cssbundling-rails' # ...using whatever version Rails wants
 
 # Use a robust preprocessing step for JavaScript, too; this lets us manage any
 # components available in NPM that have both JS and CSS components using the
-# same mechanism (Yarn):
-# https://rubygems.org/gems/jsbundling-rails/
+# same mechanism (Yarn) [https://rubygems.org/gems/jsbundling-rails/]
 #
 gem 'jsbundling-rails' # ...using whatever version Rails wants
 
-# Rails 7+ 'modern' asset pipeline:
-# https://rubygems.org/gems/propshaft
+# Rails 7+ 'modern' asset pipeline [https://rubygems.org/gems/propshaft]
 #
 gem 'propshaft', '~> 1.1'
 
@@ -48,7 +41,7 @@ gem 'hubssolib', '~> 2.1', require: 'hub_sso_lib'
 gem 'will_paginate', '~> 4.0'
 
 # Tag-based templates (abandonware, but runs on Ruby 2.6+, so Ruby 3.x should
-# also be fine) (https://github.com/jlong/radius)
+# also be fine) [https://github.com/jlong/radius]
 #
 gem 'radius', '~> 0.7'
 
@@ -72,8 +65,7 @@ gem 'html-pipeline', '~> 3.2'
 #
 gem 'rss', '~> 0.3'
 
-# "Native" vs English language names:
-# https://rubygems.org/gems/i18n-language-mapping
+# "Native" vs English language names [https://rubygems.org/gems/i18n-language-mapping]
 #
 gem 'i18n-language-mapping', '~> 0.1'
 
@@ -94,12 +86,14 @@ gem 'highline', '~> 3.1'
 gem 'newrelic_rpm'
 
 group :development, :test do
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  #
   gem 'debug', platforms: %i[ mri windows ]
+
 end
 
 group :development do
-  gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
 
   # Use console on exceptions pages [https://github.com/rails/web-console]
   #
@@ -112,10 +106,14 @@ group :development do
   # E-mail inspection.
   #
   gem 'mailcatcher'
+
 end
 
 group :test do
+
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  #
   gem 'capybara'
   gem 'selenium-webdriver'
+
 end
