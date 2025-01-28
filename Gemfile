@@ -34,7 +34,7 @@ gem "haml-rails", "~> 2.0"
 
 # Use Hub for authentication [https://github.com/pond/hubssolib]
 #
-gem 'hubssolib', '~> 2.1', require: 'hub_sso_lib'
+gem 'hubssolib', '~> 3.0', require: 'hub_sso_lib'
 
 # Easy pagination [https://rubygems.org/gems/will_paginate]
 #
