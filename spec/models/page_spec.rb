@@ -655,18 +655,19 @@ describe Page, "processing" do
   before :all do
     @request = ActionController::TestRequest.new :url => '/page/'
     @response = ActionController::TestResponse.new
+    @binding = self.binding
     @page = pages(:home)
   end
 
   it 'should set response body' do
-    @page.process(@request, @response)
+    @page.process(@request, @response, @binding)
     @response.body.should match(/Hello world!/)
   end
 
   it 'should set headers and pass request and response' do
     create_page "Test Page", :class_name => "PageSpecTestPage"
     @page = pages(:test_page)
-    @page.process(@request, @response)
+    @page.process(@request, @response, @binding)
     @response.headers['cool'].should == 'beans'
     @response.headers['request'].should == 'TestRequest'
     @response.headers['response'].should == 'TestResponse'
@@ -674,25 +675,25 @@ describe Page, "processing" do
 
   it 'should set content type based on layout' do
     @page = pages(:utf8)
-    @page.process(@request, @response)
+    @page.process(@request, @response, @binding)
     @response.should be_success
     @response.headers['Content-Type'].should == 'text/html;charset=utf8'
   end
 
   it "should copy custom headers into the response" do
     @page.stub!(:headers).and_return({"X-Extra-Header" => "This is my header"})
-    @page.process(@request, @response)
+    @page.process(@request, @response, @binding)
     @response.header['X-Extra-Header'].should == "This is my header"
   end
 
   it "should set a 200 status code by default" do
-    @page.process(@request, @response)
+    @page.process(@request, @response, @binding)
     @response.response_code.should == 200
   end
 
   it "should set the response code to the result of the response_code method on the page" do
     @page.stub!(:response_code).and_return(404)
-    @page.process(@request, @response)
+    @page.process(@request, @response, @binding)
     @response.response_code.should == 404
   end
 

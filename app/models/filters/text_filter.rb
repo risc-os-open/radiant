@@ -6,7 +6,7 @@ class Filters::TextFilter
 
   annotate :filter_name, :description
 
-  def filter(text)
+  def filter(text, _options)
     text
   end
 
@@ -15,8 +15,8 @@ class Filters::TextFilter
       subclass.filter_name = subclass.name.to_name(remove_prefix: 'Filters::', remove_suffix: 'Filter')
     end
 
-    def filter(text)
-      instance.filter(text)
+    def filter(text, _options)
+      instance.filter(text, _options)
     end
 
     def description_file(filename)

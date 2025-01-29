@@ -42,8 +42,9 @@ class PageContext < Radius::Context
     end
 
     def set_process_variables(page)
-      page.request ||= @page.request
-      page.response ||= @page.response
+      page.request            ||= @page.request
+      page.response           ||= @page.response
+      page.controller_binding ||= @page.controller_binding
     end
 
     def raise_errors?

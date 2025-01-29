@@ -63,7 +63,7 @@ module LoginSystem
     end
 
     def login_from_cookie
-      if !cookies[:session_token].blank? && user = User.find_by_session_token(cookies[:session_token]) # don't find by empty value
+      if cookies[:radiantapp_session_token].present? && user = User.find_by_session_token(cookies[:radiantapp_session_token]) # don't find by empty value
         user.remember_me
         set_session_cookie(user)
         user
@@ -79,7 +79,10 @@ module LoginSystem
     end
 
     def set_session_cookie(user = current_user)
-      cookies[:session_token] = { :value => user.session_token , :expires => Radiant::Configuration['session_timeout'].to_i.from_now.utc }
+      cookies[:radiantapp_session_token] = {
+        value:   user.session_token,
+        expires: Time.now.utc + (Radiant::Configuration['session_timeout'].to_i)
+      }
     end
 
   module ClassMethods

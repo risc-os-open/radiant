@@ -77,7 +77,7 @@ class Page < ApplicationRecord
   include Annotatable
 
   annotate :description
-  attr_accessor :session, :cookies, :request, :response, :pagination_parameters
+  attr_accessor :request, :response, :controller_binding, :pagination_parameters
   class_attribute :default_child
   self.default_child = self
 
@@ -161,11 +161,14 @@ class Page < ApplicationRecord
   end
   alias_method :url, :path
 
-  def process(session, cookies, request, response)
-    self.session  = session   # (see attr_accessor earlier; tag blocks can access this)
-    self.cookies  = cookies   #  "
-    self.request  = request   #  "
-    self.response = response  #  "
+  def process(request, response, controller_binding)
+
+    # See attr_accessor earlier; tag blocks can access these for various
+    # reasons. The ERB filter uses the controller binding as a render context.
+    #
+    self.request            = request
+    self.response           = response
+    self.controller_binding = controller_binding
 
     return { body: render().html_safe(), status: response_code() }
   end
@@ -382,7 +385,16 @@ class Page < ApplicationRecord
     def parse_object(object)
       text = object.content || ''
       text = parse(text)
-      text = object.filter.filter(text) if object.respond_to? :filter_id
+
+      if object.respond_to? :filter_id
+        text = object.filter.filter(
+          text,
+          request:            request,
+          response:           response,
+          controller_binding: controller_binding
+        )
+      end
+
       text
     end
 

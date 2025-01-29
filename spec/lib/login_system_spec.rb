@@ -109,7 +109,7 @@ describe 'Login System:', :type => :controller do
         before do
           @user = users(:admin)
           User.should_receive(:find_by_session_token).and_return(@user)
-          @cookies = { :session_token => 12345 }
+          @cookies = { :radiantapp_session_token => 12345 }
           controller.stub!(:cookies).and_return(@cookies)
         end
 
@@ -123,7 +123,7 @@ describe 'Login System:', :type => :controller do
 
         it "should update cookie" do
           @cookies.should_receive(:[]=) do |name,content|
-            name.should eql(:session_token)
+            name.should eql(:radiantapp_session_token)
             content[:value].should eql(@user.session_token)
             content[:expires].should be_close((Time.zone.now + 2.weeks).utc, 1.minute) # sometimes specs are slow
           end

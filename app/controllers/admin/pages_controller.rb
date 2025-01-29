@@ -45,7 +45,7 @@ class Admin::PagesController < Admin::ResourceController
 
       page.pagination_parameters = pagination_parameters()
 
-      result = page.process(self.session(), self.cookies(), self.request(), self.response())
+      result = page.process(self.request(), self.response(), self.binding())
       render(html: result[:body], status: result[:status])
 
       raise ActiveRecord::Rollback

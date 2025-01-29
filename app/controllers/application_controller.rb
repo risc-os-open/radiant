@@ -67,6 +67,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # This is a sort of hack for the ERB filter and snippets that we want to
+  # keep identical in shared files across applications, or in the database
+  # copy that Radiant has (which is considered the master).
+  #
+  # In 2025 the render mechanism was updated to include a controller binding
+  # so that ERB ran as if rendered as a view, but this means calling "render"
+  # is forbidden else Double Render Error issues arise. Older snippet code
+  # could check "respond_to? :render" since there was no controller binding
+  # and no render method available. Newer snippets now use the unique helper
+  # method below, that's only ever defined in Radiant and nowhere else.
+  #
+  def appctrl_radiant_snippets_are_available
+    true
+  end
+
   protected
 
     # Overridable in subclasses and invoked from #on_error_rotate_and_raise.

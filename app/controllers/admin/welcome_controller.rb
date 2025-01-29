@@ -24,7 +24,7 @@ class Admin::WelcomeController < ApplicationController
   end
 
   def logout
-    request.cookies[:session_token] = { :expires => 1.day.ago.utc }
+    request.cookies[:radiantapp_session_token] = { :expires => 1.day.ago.utc }
     self.current_user.forget_me if self.current_user
     self.current_user = nil
     announce_logged_out

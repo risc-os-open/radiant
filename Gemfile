@@ -10,6 +10,10 @@ gem 'pg', '~> 1.5'
 #
 gem 'puma', '~> 6.0'
 
+# This isn't part of Ruby anymore
+#
+gem 'ostruct', '~> 0.6'
+
 # For Windows or esoteric Unix/Linux-like distributions.
 #
 gem 'tzinfo-data'
