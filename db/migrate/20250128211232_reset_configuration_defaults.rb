@@ -10,6 +10,8 @@ class ResetConfigurationDefaults < ActiveRecord::Migration[8.0]
     Radiant::Configuration['defaults.page.fields'] = 'Keywords, Description'
     Radiant::Configuration['default_locale'      ] = 'en'
     Radiant::Configuration['session_timeout'     ] = 2.weeks
+
+    Radiant::Configuration.find_by_key('defaults.locale' )&.destroy
   end
 
   # This restores settings in the current ROOL live data.

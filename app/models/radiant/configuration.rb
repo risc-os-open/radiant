@@ -66,7 +66,7 @@ module Radiant
       end
 
       def default_settings
-        @default_settings ||= %w{ defaults.locale defaults.page.filter defaults.page.parts defaults.page.fields defaults.page.status defaults.snippet.filter }
+        @default_settings ||= %w{ default_locale defaults.page.filter defaults.page.parts defaults.page.fields defaults.page.status defaults.snippet.filter }
       end
 
       def user_settings
