@@ -45,8 +45,9 @@ en:
     admin:
       title: 'admin header title'
       subtitle: 'admin header subtitle'
+    session_timeout: 'session timeout'
+    default_locale: 'default language'
     defaults:
-      locale: 'default language'
       page:
         fields: "default page fields"
         filter: "default page filter"
