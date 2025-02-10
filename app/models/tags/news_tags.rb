@@ -137,7 +137,7 @@ see SSL errors thrown by Ruby instead of your parsed XML data.
 
     # Loop through all items in the feed.
 
-    rss.items.each do |item|
+    rss&.items.each do |item|
 
       # The item must have at least a title. The respond_to? check is to
       # cope with normal (string) versus Atom (structure) feed behaviour.

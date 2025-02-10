@@ -340,7 +340,7 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
 
       count = 0
       html << "<h3>#{group_key}<a name=\"#{group_key.to_s.gsub(/\W/, '_').downcase}\" style=\"text-decoration: none; border-bottom: none; font-size: 1px\">&nbsp</a></h3>\n"
-      html << "<table width=\"100%\" class=\"parsed_directory_listing\" border=\"0\">\n"
+      html << "<table width=\"100%\" class=\"parsed_directory_listing flexible\" border=\"0\">\n"
       html << "<tr><th width=\"10%\">Icon</th><th width=\"20%\" align=\"left\">Name,&nbsp;date&nbsp;&amp;&nbsp;MD5</th><th width=\"#{dscwd}\" align=\"left\">Description</th><th width=\"10%\">Version</th><th width=\"10%\">Size</th>"
       html << "<th width=\"10%\">Details</th>" if (link_base)
       html << "</tr>\n"

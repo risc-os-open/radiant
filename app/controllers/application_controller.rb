@@ -170,6 +170,8 @@ class ApplicationController < ActionController::Base
       session[:last_exception_at] = Time.now.iso8601(1)
       locals                      = { exception: exception }
 
+      Sentry.capture_exception(exception)
+
       # The top-of-this-method call to #handle_special_case_exception may have
       # caused a redirection or render already, so check #performed? for that.
       #
