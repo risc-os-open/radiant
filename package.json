@@ -7,10 +7,10 @@
     "sass": "^1.68.0"
   },
   "scripts": {
-    "build:js": "cat app/javascript/libraries/prototype.js app/javascript/libraries/lowpro.js app/javascript/libraries/effects.js app/javascript/libraries/controls.js app/javascript/libraries/dragdrop.js app/javascript/admin/codearea.js app/javascript/admin/cookie.js app/javascript/admin/dateinput.js app/javascript/admin/dropdown.js app/javascript/admin/page_preview.js app/javascript/admin/pagefield.js app/javascript/admin/pagestatus.js app/javascript/admin/popup.js app/javascript/admin/ruledtable.js app/javascript/admin/shortcuts.js app/javascript/admin/sitemap.js app/javascript/admin/status.js app/javascript/admin/tabcontrol.js app/javascript/admin/toggle.js app/javascript/admin/utility.js app/javascript/admin/validationerror.js app/javascript/admin/admin.js > app/assets/builds/application.js",
+    "build": "cat app/javascript/libraries/prototype.js app/javascript/libraries/lowpro.js app/javascript/libraries/effects.js app/javascript/libraries/controls.js app/javascript/libraries/dragdrop.js app/javascript/admin/codearea.js app/javascript/admin/cookie.js app/javascript/admin/dateinput.js app/javascript/admin/dropdown.js app/javascript/admin/page_preview.js app/javascript/admin/pagefield.js app/javascript/admin/pagestatus.js app/javascript/admin/popup.js app/javascript/admin/ruledtable.js app/javascript/admin/shortcuts.js app/javascript/admin/sitemap.js app/javascript/admin/status.js app/javascript/admin/tabcontrol.js app/javascript/admin/toggle.js app/javascript/admin/utility.js app/javascript/admin/validationerror.js app/javascript/admin/admin.js > app/assets/builds/application.js",
     "build:css": "sass ./app/assets/stylesheets/application.scss ./app/assets/builds/application.css --silence-deprecation=import --embed-sources --style compressed --load-path=node_modules",
 
-    "dev:build:js": "nodemon --watch app/javascript -e js -x \"npm run build:js\"",
+    "dev:build": "nodemon --watch app/javascript -e js -x \"npm run build\"",
     "dev:build:css": "nodemon --watch app/assets/stylesheets -e css,scss,sass -x \"npm run build:css\""
   }
 }

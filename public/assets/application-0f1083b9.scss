@@ -1,0 +1,14 @@
+// Main stylesheet for the Radiant admin interface, or whenever something is
+// rendered that isn't using a database-hosted layout (e.g. an exception page).
+//
+// MOST PUBLIC PAGES ARE SERVED FROM THE DATABASE, which holds the entire page
+// template. CSS files are specified therein and are totally independent of all
+// CSS files here.
+
+@import "admin/variables";
+
+@import "compass/compass";
+@include global-reset;
+
+@import "admin/modules";
+@import "admin/partials";
