@@ -340,10 +340,10 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
 
       count = 0
       html << "<h3>#{group_key}<a name=\"#{group_key.to_s.gsub(/\W/, '_').downcase}\" style=\"text-decoration: none; border-bottom: none; font-size: 1px\">&nbsp</a></h3>\n"
-      html << "<table width=\"100%\" class=\"parsed_directory_listing flexible\" border=\"0\">\n"
-      html << "<tr><th width=\"10%\">Icon</th><th width=\"20%\" align=\"left\">Name,&nbsp;date&nbsp;&amp;&nbsp;MD5</th><th width=\"#{dscwd}\" align=\"left\">Description</th><th width=\"10%\">Version</th><th width=\"10%\">Size</th>"
+      html << "<table width=\"100%\" class=\"parsed_directory_listing flexible annotated\" border=\"0\">\n"
+      html << "<thead><tr><th width=\"10%\">Icon</th><th width=\"20%\" align=\"left\">Name,&nbsp;date&nbsp;&amp;&nbsp;MD5</th><th width=\"#{dscwd}\" align=\"left\">Description</th><th width=\"10%\">Version</th><th width=\"10%\">Size</th>"
       html << "<th width=\"10%\">Details</th>" if (link_base)
-      html << "</tr>\n"
+      html << "</tr></thead>\n"
 
       # Sort the items inside each group by name and output each in a table
       # row.
@@ -357,7 +357,7 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
         row_class = (count % 2 == 0) ? 'even' : 'odd'
         count += 1
 
-        html << "<tr class=\"#{row_class}\">"
+        html << "<tbody><tr class=\"#{row_class}\">"
 
         if (entry[:icon].empty?)
           html << "<td>&nbsp;</td>"
@@ -386,18 +386,18 @@ If an icon cannot be found, @icons/_default.png@ is tried. If that doesn't exist
 
         html << "<td><a name=\"#{entry[:name].gsub(/\W/, '_').downcase}\" href=\"#{entry[:raw][:link]}\">#{entry[:name]}</a>#{tstr}#{md5str}</td>"
         html << "<td class=\"can_wrap\">#{entry[:info]}</td>"
-        html << "<td align=\"center\">#{entry[:version]}</td>"
-        html << "<td align=\"center\">#{entry[:raw][:size]}</td>"
+        html << "<td data-label=\"Version:\" align=\"center\">#{entry[:version]}</td>"
+        html << "<td data-label=\"Size:\"align=\"center\">#{entry[:raw][:size]}</td>"
 
         if (link_base)
           if (link_icon)
-            html << "<td align=\"center\"><a href=\"#{entry[:link]}\" class=\"img\"><img src=\"#{link_icon}\" alt=\"info\" /></a></td>"
+            html << "<td align=\"center\" class=\"parsed_directory_listing_details\"><a href=\"#{entry[:link]}\" class=\"img\"><img src=\"#{link_icon}\" alt=\"info\" /></a></td>"
           else
             html << "<td align=\"center\"><a href=\"#{entry[:link]}\">Details</a></td>"
           end
         end
 
-        html << "</tr>\n"
+        html << "</tr></tbody>\n"
       end
 
       html  << "</table>\n\n"
